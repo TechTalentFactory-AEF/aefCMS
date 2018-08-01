@@ -1,17 +1,8 @@
 package aefCMS.aefCMS_WEB;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.Writer;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class Main {
 	
@@ -83,10 +74,16 @@ public class Main {
 			//SAVE TREE 
 			PageTreeSerializer.saveTreeToDisc(SAVE_PAGETREE_PATH, exampleTree);
 			
-//			//LOAD TREE
-//			PageTree loadedTree = PageTreeSerializer.loadTreeFromDisc(SAVE_PAGETREE_PATH);
-//			System.out.println(loadedTree);
-
+			//LOAD TREE
+			PageTree loadedTree = PageTreeSerializer.loadTreeFromDisc(SAVE_PAGETREE_PATH, LIBRARY_PATH);
+			System.out.println("LOADED TREE: ");
+			loadedTree.print();
+			Map<String, String> updatedMap = new HashMap<String, String>();
+			updatedMap.put("h-text", "HELLO WORLD TITLE MODIFIED");
+			PageTree.updateElement(loadedTree.getRoot().getChildren().get(0),updatedMap);
+			System.out.println("MODIFIED TREE:");
+			loadedTree.print();
+			System.out.println(r.render(loadedTree.getRoot()));
 	}
 }
 	

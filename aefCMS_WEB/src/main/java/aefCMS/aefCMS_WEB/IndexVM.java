@@ -23,7 +23,7 @@ import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
-	private final String CONTEXT_PATH = WebApps.getCurrent().getServletContext().getRealPath("/");	//the base path of our webapp
+	private final String CONTEXT_PATH = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
 	
 	private final String LIBRARY_PATH = 	  CONTEXT_PATH + "WEB-INF/cms_library";
 	private final String PAGETREE_SAVEFILE =  CONTEXT_PATH + "saved_pagetree/pageTree.json";
@@ -46,6 +46,8 @@ public class IndexVM {
 		
 		return model;
 	}
+	
+	//INITIALIZATION
 	
 	@Init
 	public void init() throws IOException {

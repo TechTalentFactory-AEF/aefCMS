@@ -1,5 +1,7 @@
 package aefCMS.aefCMS_WEB;
 
+import java.util.Map;
+
 public class PageTree {
 	
 	private PageElement root;
@@ -37,6 +39,10 @@ public class PageTree {
 		addElement(element, newParent, newSiblingsPosition);
 	}
 	
+	public static void updateElement (PageElement oldElement, Map<String,String> newParameters) {
+		oldElement.setParameters(newParameters);
+	}
+	
 	//PRINT TREE
 	
 	public void print() {
@@ -45,5 +51,9 @@ public class PageTree {
 		System.out.println("+ + + + + + + + + + + + + + + + + + +");
 	}
 	
+	// GET SIBLINGS POSITION
 	
+	public static int getSiblingsPosition(PageElement selectedElement) {
+		return selectedElement.getParent().getChildren().indexOf(selectedElement);	
+	}
 }
