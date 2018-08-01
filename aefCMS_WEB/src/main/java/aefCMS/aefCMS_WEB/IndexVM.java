@@ -19,42 +19,77 @@ import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.util.Clients;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
+import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
 	private final String CONTEXT_PATH = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
-	
-	private final String LIBRARY_PATH = 	  CONTEXT_PATH + "WEB-INF/cms_library";
-	private final String PAGETREE_SAVEFILE =  CONTEXT_PATH + "saved_pagetree/pageTree.json";
+	private final String LIBRARY_PATH 	   = CONTEXT_PATH + "WEB-INF/cms_library";
+	private final String PAGETREE_SAVEFILE = CONTEXT_PATH + "saved_pagetree/pageTree.json";
+	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
 	
 	private Library lib;
+	private HtmlRenderer iframeRenderer;
 	
 	private PageTree model;
+
+	private DraggableTreeModel draggableTreeModel;
+	private DraggableTreeElement draggableSelectedElement;
+	
+	private String selectedPopupType;
 	
 	//GETTERS SETTERS
 	
-	public PageTree getModel() {
-		
-		if (model == null) {
-			Map<String, String> stdPageAttributes = new HashMap<String, String>();
-			stdPageAttributes.put("title", "My Web Page");
-			
-			PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-			model = new PageTree(stdPage);
-		}
-		
-		return model;
+	//TODO draft
+	public DraggableTreeModel getDraggableTreeModel() {
+		return draggableTreeModel;
+	}
+
+	public DraggableTreeElement getDraggableSelectedElement() {
+		return draggableSelectedElement;
+	}
+
+	public void setDraggableSelectedElement(DraggableTreeElement draggableSelectedElement) {
+		this.draggableSelectedElement = draggableSelectedElement;
+	}
+	
+	public String getSelectedPopupPath() {
+		String path = null;
+		if (selectedPopupType != null)
+			path = POPUPS_PATH + selectedPopupType + ".zul";	
+		return path;
 	}
 	
 	//INITIALIZATION
-	
+
 	@Init
-	public void init() throws IOException {
+	@NotifyChange("draggableTreeModel")
+	public void init() throws Exception {
+		
 		lib = new Library(new File(LIBRARY_PATH));
+		
+		iframeRenderer = new HtmlRenderer(LIBRARY_PATH);
+		
+		//init pageTree
+		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+		stdPageAttributes.put("title", "My Web Page");
+		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+		model = new PageTree(stdPage);
+		
+		//TODO draft
+		DraggableTreeElement de = new DraggableTreeElement(null,model.getRoot().getType().getName());
+		draggableTreeModel = new DraggableTreeModel(de);
 	}
 	
+	//POPUPS
 	
+	@Command
+	@NotifyChange("selectedPopupPath")
+	public void openPopup(@BindingParam("popupType") String popupType) {
+		System.out.println(popupType);
+		selectedPopupType = popupType;
+	}
 	
 	
 	

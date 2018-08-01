@@ -1,0 +1,27 @@
+<window id="popupAdd"
+    	title="Add Fragment"
+    	mode="modal" 
+	    width="60%"
+    	height="70%"
+    	contentStyle="overflow:auto;"
+ 		style="padding: 0;">
+	
+	<!-- SELECT MENU -->
+	<hbox>
+		<listbox model="@load(IndexVm.fragmentTypeList)" 
+				 selectedItem="@bind(IndexVm.selectedFragmentType)"
+			  	 width="100%"
+			  	 rows="1"
+			  	 mold="select"/>
+		<button label="Close Popup" onClick="@command('closePopup')"/>
+	</hbox>
+	<space/>
+	
+	<!-- VARIABLE FORM -->
+	<include popupType="@load(IndexVm.popupType)" src="@load(IndexVm.selectedFragmentTypeZul)"/>
+	
+	<!-- FINAL COMMAND BUTTON -->
+	<hbox>
+		<button label="ADD" onClick="@command('saveElement', opType=IndexVm.popupType)"/>
+	</hbox>
+</window>

@@ -5,6 +5,43 @@
 			validationMessages="@id('indexVmMsgs')"
 			height="100%"
 			style="padding: 0;">
+	
+		<borderlayout>
+		
+			<north border="0">
+				<!-- TITLE --> 
+				<label value="Welcome to this simple Html Page Generator"/>
+			</north>
+			
+			<west size="25%">
+				<div>
+					<!-- TREE --> 
+					<hbox id="editableTree">
+						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
+						<space/>
+						<button iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
+						<!-- 
+						<button iconSclass="z-icon-minus" disabled="@load(empty IndexVm.selectedElement or (IndexVm.selectedElement eq IndexVm.root))" onClick="@command('openPopup', popupType='remove')"/>
+						<button iconSclass="z-icon-gear" disabled="@load(empty IndexVm.selectedElement or (IndexVm.selectedElement eq IndexVm.root))" onClick="@command('openPopup', popupType='modify')"/>
+						-->
+					</hbox>
+	
+					<!-- POPUP --> 
+					<include src="@load(IndexVm.selectedPopupPath)"/>
+				</div>
+			</west>
+			<!--
+			<center>
+				 GENERATED PAGE 
+				<iframe id="ifrInsideZk" src="generated-page.html" hflex="1" vflex="1"/>
+			</center>
+			 -->
+			
+		</borderlayout>
+
+	</window>
+</zk>
+
 <!-- 		
 		<borderlayout>
 		
@@ -36,5 +73,3 @@
 			
 		</borderlayout>
  -->
-	</window>
-</zk>
