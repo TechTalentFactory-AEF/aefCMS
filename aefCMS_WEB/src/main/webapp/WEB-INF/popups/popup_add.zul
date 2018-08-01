@@ -1,5 +1,4 @@
-<window id="popupAdd"
-    	title="Add Element"
+<window title="Add Element"
     	mode="modal" 
 	    width="60%"
     	height="70%"
@@ -18,10 +17,10 @@
 	<space/>
 	
 	<!-- VARIABLE FORM -->
-	<include opType="@load(IndexVm.selectedPopupType)" src="@load(IndexVm.selectedLibraryElementZul)"/>
+	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
 	
 	<!-- FINAL COMMAND BUTTON -->
 	<hbox>
-		<button label="ADD" onClick="@global-command('saveElement')"/>
+		<button label="ADD" onClick="@command('saveElement')"/>
 	</hbox>
 </window>

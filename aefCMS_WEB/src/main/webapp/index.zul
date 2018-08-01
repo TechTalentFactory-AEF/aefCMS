@@ -1,6 +1,5 @@
 <zk>
-	<window id="indexWindow"
-			apply="org.zkoss.bind.BindComposer"
+	<window apply="org.zkoss.bind.BindComposer"
 			viewModel="@id('IndexVm') @init('aefCMS.main.IndexVM')"
 			validationMessages="@id('indexVmMsgs')"
 			height="100%"

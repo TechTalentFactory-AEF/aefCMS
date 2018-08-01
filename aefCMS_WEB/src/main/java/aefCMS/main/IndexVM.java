@@ -7,28 +7,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.WebApps;
-import org.zkoss.zk.ui.util.Clients;
 
-import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
-	private final String CONTEXT_PATH = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
-	private final String LIBRARY_PATH 	   = CONTEXT_PATH + "WEB-INF/cms_library";
-	private final String PAGETREE_SAVEFILE = CONTEXT_PATH + "saved_pagetree/pageTree.json";
+	//PATHS
+	
+	private final String CONTEXT_PATH 	   = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
+	private final String REL_LIBRARY_PATH  = "WEB-INF/cms_library";
+	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
-	private final String EL_ZUL_PATH   	   = "/WEB-INF/cms_library/";
+	
+	//ATTRIBUTES
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
@@ -36,7 +33,7 @@ public class IndexVM {
 	private List<String> libraryElementList;
 	
 	private PageTree model;
-
+	
 	private DraggableTreeModel draggableTreeModel;
 	private DraggableTreeElement draggableSelectedElement;
 	
@@ -44,7 +41,7 @@ public class IndexVM {
 	private String selectedLibraryElement;
 	
 	//GETTERS SETTERS
-
+	
 	public List<String> getLibraryElementList() {		
 		if (libraryElementList == null) {
 			libraryElementList = new ArrayList<String>();
@@ -55,6 +52,7 @@ public class IndexVM {
 		return libraryElementList;
 	}
 	
+	//TODO CHANGE
 	public DraggableTreeModel getDraggableTreeModel() {
 		PageElement root = model.getRoot();
 		DraggableTreeElement draggableTreeRoot = new DraggableTreeElement(null, root.getType().getName());
@@ -66,7 +64,7 @@ public class IndexVM {
 		draggableTreeRoot.recomputeSpacersRecursive();
 		return new DraggableTreeModel(draggableTreeRoot);
 	}
-
+	
 	public DraggableTreeElement getDraggableSelectedElement() {
 		return draggableSelectedElement;
 	}
@@ -94,7 +92,7 @@ public class IndexVM {
 	public String getSelectedLibraryElementZul() {
 		String path = null;
 		if (selectedLibraryElement != null)
-			path = EL_ZUL_PATH + selectedLibraryElement + "/" + "mask.zul";
+			path = REL_LIBRARY_PATH + "/" + selectedLibraryElement + "/" + "mask.zul";
 		return path;
 	}
 	
@@ -102,11 +100,11 @@ public class IndexVM {
 
 	@Init
 	@NotifyChange("draggableTreeModel")
-	public void init() throws Exception {
+	public void init() throws IOException, Exception {
 		
-		lib = new Library(new File(LIBRARY_PATH));
+		lib = new Library(new File(ABS_LIBRARY_PATH));
 		
-		iframeRenderer = new HtmlRenderer(LIBRARY_PATH);
+		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
 		//TODO DRAFT
 		//init pageTree
@@ -125,8 +123,15 @@ public class IndexVM {
 		selectedPopupType = popupType;
 	}
 	
+	@Command
+	@NotifyChange("selectedPopupPath")
+	public void closePopup() {
+		selectedPopupType = null;
+	}
+	
 	//UTILITIES
 	
+	//TODO CHANGE
 	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
 		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
 		if (node.getChildren().size() > 0) {
@@ -135,7 +140,6 @@ public class IndexVM {
 			}
 		}
 	}
-	
 }
 	
 	
