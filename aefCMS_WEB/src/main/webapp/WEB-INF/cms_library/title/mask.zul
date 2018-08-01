@@ -1,0 +1,42 @@
+<hlayout id="titleEdit"
+		 viewModel="@id('titleVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.TitleVM')"
+		 width="100%"
+		 >
+	<vbox align="center">
+		<space></space>
+	
+	<grid>
+		<columns>
+			<column hflex="min"/>
+			<column/>
+		</columns>
+		<rows>
+			<row>
+				<label value="Id: " style="color: red;" />	
+				<textbox hflex="1"
+					   	 value="@load(titleVm.pipeHashMap['id']) @save(titleVm.pipeHashMap['id'], before='saveElement')"/> 	
+			</row>
+			<row>
+				<label value="Color: "></label>
+				<radiogroup selectedItem="@load(titleVm.pipeHashMap['color']) @save(titleVm.pipeHashMap['color'], before='saveElement')">
+					<radio label="Red" value="red"/>
+					<radio label="Green" value="green"/>
+				</radiogroup>
+			</row>
+			<row>
+				<label value="Title text: "/>
+				<textbox hflex="1" 
+						 value="@load(titleVm.pipeHashMap['text']) @save(titleVm.pipeHashMap['text'], before='saveElement') "/>
+			</row>
+		</rows>
+	</grid>
+	
+	<hbox align="center">
+			<button label="Save" onClick="@command('saveElement', opType=IndexVm.popupType)"/>
+			<button label="Back" onClick="@global-command('closePopup')"/>
+	</hbox>
+	</vbox>
+</hlayout>
+
+
+

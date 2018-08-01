@@ -1,0 +1,42 @@
+<hlayout id="containerEdit"
+		 viewModel="@id('containerVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.ContainerVM')">
+	<vbox align="center">
+		<space></space>
+		<grid>
+				<columns>
+					<column hflex="min"/>
+					<column/>
+				</columns>
+				<rows>
+					<row>
+						<label value="Id: " style="color: red;"/>
+						<textbox hflex="1" value="@bind(containerVm.pipeHashMap['id'])"/>	
+					</row>
+					<row>
+						<label value="Border style: "></label>
+						<radiogroup selectedItem="@bind(containerVm.pipeHashMap['border-style'])">
+							<radio label="Solid" value="solid"/>
+							<radio label="Dashed" value="dashed"/>
+							<radio label="Dotted" value="dotted"/>
+						</radiogroup>
+					</row>
+					<row>
+						<label value="Border Color: "></label>
+						<radiogroup selectedItem="@bind(containerVm.pipeHashMap['border-color'])">
+							<radio label="Red" value="red"/>
+							<radio label="Blue" value="blue"/>
+							<radio label="Green" value="green"/>
+						</radiogroup>	
+					</row>
+					<row>
+						<label value="Border width in px:"/>
+						<intbox hflex="1" value="@bind(containerVm.pipeHashMap['border-width'])"/>
+					</row>
+				</rows>
+			</grid>
+		<hbox>
+			<button label="Save" onClick="@command('saveElement')"/>
+			<button label="Back" onClick="@global-command('closePopup')"/> 
+		</hbox>
+	</vbox>
+</hlayout>

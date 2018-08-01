@@ -1,0 +1,33 @@
+<hlayout id="paragraphEdit"
+	viewModel="@id('paragraphVm') @init('CMSPROT.CMSPROT_ZK_FragmentsGen_PageAsm.ParagraphVM')">
+	<vbox align="center">
+		<space></space>
+		<grid>
+			<columns>
+				<column hflex="min" />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Id: " style="color: red;" />
+					<textbox hflex="1" value="@bind(paragraphVm.pipeHashMap['id'])" />
+				</row>
+				<row>
+					<label value="Color: "></label>
+					<radiogroup selectedItem="@bind(paragraphVm.pipeHashMap['color'])">
+						<radio label="Orange" value="orange" />
+						<radio label="Blue" value="blue" />
+					</radiogroup>
+				</row>
+				<row>
+					<label value="Paragraph text: " />
+					<textbox hflex="1" value="@bind(paragraphVm.pipeHashMap['text'])" />
+				</row>
+			</rows>
+		</grid>
+		<hbox>
+			<button label="Save" onClick="@command('saveElement')" />
+			<button label="Back" onClick="@global-command('closePopup')" />
+		</hbox>
+	</vbox>
+</hlayout>

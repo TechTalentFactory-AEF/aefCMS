@@ -1,0 +1,20 @@
+<window id="popupAdd" title="Add Fragment" mode="modal"
+	contentStyle="overflow:auto;">
+	<!-- SELECT MENU -->
+
+	<hlayout width="100%" valign="middle">
+
+		<label value="Fragment type"></label>
+		<listbox model="@load(IndexVm.libraryElementList)"
+			selectedItem="@bind(IndexVm.selectedLibraryElement)" width="100%"
+			rows="1" mold="select" />
+		<button label="Close Popup"
+			onClick="@global-command('closePopup')"
+			visible="@load(empty IndexVm.selectedLibraryElement)" />
+
+	</hlayout>
+
+	<!-- VARIABLE FORM -->
+	<include src="@load(IndexVm.selectedLibraryElementZul)" />
+
+</window>
