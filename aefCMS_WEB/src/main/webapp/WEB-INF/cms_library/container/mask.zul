@@ -1,0 +1,24 @@
+<hlayout>
+	<vbox>
+		<hbox>
+			<label value="Border style: "></label>
+			<radiogroup selectedItem="@bind(IndexVm.attributesHashMap['border-style'])">
+				<radio label="Solid" value="solid"/>
+				<radio label="Dashed" value="dashed"/>
+				<radio label="Dotted" value="dotted"/>
+			</radiogroup>
+		</hbox>
+		<hbox>
+			<label value="Border Color: "></label>
+			<radiogroup selectedItem="@bind(IndexVm.attributesHashMap['border-color'])">
+				<radio label="Red" value="red"/>
+				<radio label="Blue" value="blue"/>
+				<radio label="Green" value="green"/>
+			</radiogroup>
+		</hbox>
+		<hbox>
+			<label value="Border width: "/>
+			<intbox value="@bind(IndexVm.attributesHashMap['border-width'])"/><label value="px"/>
+		</hbox>
+	</vbox>
+</hlayout>

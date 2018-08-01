@@ -1,0 +1,8 @@
+<hlayout>
+	<vbox>
+		<hbox>
+			<label value="Title: "/>
+			<textbox value="@bind(IndexVm.attributesHashMap['title'])"/>
+		</hbox>
+	</vbox>
+</hlayout>

@@ -3,9 +3,13 @@
 		<hbox>
 			<label value="Color: "></label>
 			<radiogroup selectedItem="@bind(IndexVm.attributesHashMap['text-color'])">
-				<radio label="Red" value="red"/>
-				<radio label="Green" value="green"/>
+				<radio label="Blue" value="blue"/>
+				<radio label="Orange" value="orange"/>
 			</radiogroup>
+		</hbox>
+		<hbox>
+			<label value="Size: "></label>
+			<intbox value="@bind(IndexVm.attributesHashMap['text-size'])"/><label value="px"/>
 		</hbox>
 		<hbox>
 			<label value="Text: "/>
