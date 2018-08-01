@@ -137,9 +137,11 @@ public class IndexVM {
 	}
 	
 	@Command
-	@NotifyChange("selectedPopupPath")
+	@NotifyChange({"selectedPopupPath", "selectedLibraryElement"})
 	public void closePopup() {
 		selectedPopupType = null;
+		selectedLibraryElement = null;   //clean it otherwise, when you open again the add popup, the old type will be already selected
+		
 	}
 	
 	//TREES OPERATIONS
