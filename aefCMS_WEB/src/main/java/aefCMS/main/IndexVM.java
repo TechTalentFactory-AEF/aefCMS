@@ -1,4 +1,4 @@
-package aefCMS.aefCMS_WEB;
+package aefCMS.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +28,12 @@ public class IndexVM {
 	private final String LIBRARY_PATH 	   = CONTEXT_PATH + "WEB-INF/cms_library";
 	private final String PAGETREE_SAVEFILE = CONTEXT_PATH + "saved_pagetree/pageTree.json";
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
+	private final String EL_ZUL_PATH   	   = "/WEB-INF/cms_library/";
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
+	
+	private List<String> libraryElementList;
 	
 	private PageTree model;
 
@@ -38,12 +41,30 @@ public class IndexVM {
 	private DraggableTreeElement draggableSelectedElement;
 	
 	private String selectedPopupType;
+	private String selectedLibraryElement;
 	
 	//GETTERS SETTERS
+
+	public List<String> getLibraryElementList() {		
+		if (libraryElementList == null) {
+			libraryElementList = new ArrayList<String>();
+			for(LibraryElement libEl : lib.getElements())
+				libraryElementList.add(libEl.getName());
+			libraryElementList.sort(null);	
+		}
+		return libraryElementList;
+	}
 	
-	//TODO draft
 	public DraggableTreeModel getDraggableTreeModel() {
-		return draggableTreeModel;
+		PageElement root = model.getRoot();
+		DraggableTreeElement draggableTreeRoot = new DraggableTreeElement(null, root.getType().getName());
+		if (root.getChildren().size() > 0) {
+			for (PageElement child : root.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeRoot);
+			}
+		}
+		draggableTreeRoot.recomputeSpacersRecursive();
+		return new DraggableTreeModel(draggableTreeRoot);
 	}
 
 	public DraggableTreeElement getDraggableSelectedElement() {
@@ -61,6 +82,22 @@ public class IndexVM {
 		return path;
 	}
 	
+	public String getSelectedLibraryElement() {
+		return selectedLibraryElement;
+	}
+	
+	@NotifyChange("selectedLibraryElementZul")
+	public void setSelectedLibraryElement(String selectedLibraryElement) {
+		this.selectedLibraryElement = selectedLibraryElement;
+	}
+	
+	public String getSelectedLibraryElementZul() {
+		String path = null;
+		if (selectedLibraryElement != null)
+			path = EL_ZUL_PATH + selectedLibraryElement + "/" + "mask.zul";
+		return path;
+	}
+	
 	//INITIALIZATION
 
 	@Init
@@ -71,15 +108,13 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(LIBRARY_PATH);
 		
+		//TODO DRAFT
 		//init pageTree
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 		stdPageAttributes.put("title", "My Web Page");
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
 		model = new PageTree(stdPage);
 		
-		//TODO draft
-		DraggableTreeElement de = new DraggableTreeElement(null,model.getRoot().getType().getName());
-		draggableTreeModel = new DraggableTreeModel(de);
 	}
 	
 	//POPUPS
@@ -87,11 +122,19 @@ public class IndexVM {
 	@Command
 	@NotifyChange("selectedPopupPath")
 	public void openPopup(@BindingParam("popupType") String popupType) {
-		System.out.println(popupType);
 		selectedPopupType = popupType;
 	}
 	
+	//UTILITIES
 	
+	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
+		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
+		if (node.getChildren().size() > 0) {
+			for (PageElement child : node.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeNode);
+			}
+		}
+	}
 	
 }
 	

@@ -1,0 +1,16 @@
+<hlayout id="titleEdit"
+		 viewModel="@id('titleVm') @init('aefCMS.elementsViewModels.TitleVM')">
+	<vbox>
+		<hbox>
+			<label value="Color: "></label>
+			<radiogroup selectedItem="@bind(titleVm.pipeHashMap['text-color'])">
+				<radio label="Red" value="red"/>
+				<radio label="Green" value="green"/>
+			</radiogroup>
+		</hbox>
+		<hbox>
+			<label value="Title text: "/>
+			<textbox value="@bind(titleVm.pipeHashMap['text'])"/>
+		</hbox>
+	</vbox>
+</hlayout>

@@ -1,5 +1,5 @@
 <window id="popupAdd"
-    	title="Add Fragment"
+    	title="Add Element"
     	mode="modal" 
 	    width="60%"
     	height="70%"
@@ -8,8 +8,8 @@
 	
 	<!-- SELECT MENU -->
 	<hbox>
-		<listbox model="@load(IndexVm.fragmentTypeList)" 
-				 selectedItem="@bind(IndexVm.selectedFragmentType)"
+		<listbox model="@load(IndexVm.libraryElementList)" 
+				 selectedItem="@bind(IndexVm.selectedLibraryElement)"
 			  	 width="100%"
 			  	 rows="1"
 			  	 mold="select"/>
@@ -18,10 +18,10 @@
 	<space/>
 	
 	<!-- VARIABLE FORM -->
-	<include popupType="@load(IndexVm.popupType)" src="@load(IndexVm.selectedFragmentTypeZul)"/>
+	<include opType="@load(IndexVm.selectedPopupType)" src="@load(IndexVm.selectedLibraryElementZul)"/>
 	
 	<!-- FINAL COMMAND BUTTON -->
 	<hbox>
-		<button label="ADD" onClick="@command('saveElement', opType=IndexVm.popupType)"/>
+		<button label="ADD" onClick="@global-command('saveElement')"/>
 	</hbox>
 </window>
