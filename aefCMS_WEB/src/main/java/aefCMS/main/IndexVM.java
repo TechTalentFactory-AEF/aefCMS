@@ -88,9 +88,10 @@ public class IndexVM {
 		return selectedLibraryElement;
 	}
 	
-	@NotifyChange("selectedLibraryElementZul")
+	@NotifyChange({"selectedLibraryElementZul","attributesHashMap"})
 	public void setSelectedLibraryElement(String selectedLibraryElement) {
 		this.selectedLibraryElement = selectedLibraryElement;
+		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
 	}
 	
 	public String getSelectedLibraryElementZul() {
