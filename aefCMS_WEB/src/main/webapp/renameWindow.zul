@@ -1,0 +1,25 @@
+<window id="renameRootPopupWindow" sclass="popUpWindows"
+	title="Rename PopUp" width="50%" contentStyle="overflow:auto;"
+	mode="modal" visible="@load(vm.renamePopupVisibility)"
+	onCancel="@command('resetAndBack')">
+	<vlayout>
+		<!-- Title component -->
+		<div>
+			<vlayout>
+				<label value="Rename the root"></label>
+				Node ID:
+				<textbox
+					value="@load(vm.root.description) @save(vm.attributeDataMap.id, before='renameProject')"
+					width="100%">
+				</textbox>
+				<div align="center">
+					<button label="Rename Project"
+						onClick="@command('renameProject')" width="30%" />
+					<button label="Back"
+						onClick="@command('resetAndBack')" width="30%" />
+				</div>
+
+			</vlayout>
+		</div>
+	</vlayout>
+</window>
