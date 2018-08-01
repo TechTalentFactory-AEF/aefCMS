@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zweb.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zul.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zkplus.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zkbind.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zk.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zhtml.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zel.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/zcommon.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/slf4j-jdk14.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/silvertail.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/sapphire.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/flashchart.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/commons-io.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/commons-codec.jar"/>
+	<classpathentry kind="lib" path="/home/federico/Scaricati/jar/zk-bin-8.5.0/bsh.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

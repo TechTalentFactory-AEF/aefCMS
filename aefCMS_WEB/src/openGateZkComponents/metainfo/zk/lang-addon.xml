@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language-addon>
+	<addon-name>zkComponents</addon-name>
+	<!-- javascript src="/js/awesome.js"/-->
+	<language-name>xul/html</language-name>
+	<component>
+		<component-name>draggableTree</component-name>
+        <component-class>biz.opengate.zkComponents.draggableTree.DraggableTreeComponent</component-class>
+
+		<mold>
+            <mold-name>default</mold-name>
+            <css-uri>~./css/draggableTree.css</css-uri>
+        </mold>
+	</component>		
+</language-addon>

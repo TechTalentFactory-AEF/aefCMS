@@ -1,0 +1,23 @@
+<tree
+	apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('viewModel') @init('biz.opengate.zkComponents.draggableTree.DraggableTreeViewModel')"
+	model="@load(viewModel.model)"	
+	selectedItem="@bind(viewModel.selectedElement)"
+	onSelect="@command('selectedNodeChanged')"
+	>
+
+	<template name="model" var="element">
+		<treeitem
+			open="@bind(element.treeElementOpen)"
+			value="@load(element)" 
+			draggable="@load(element.draggable)" 
+			droppable="true"
+			onDrop="@command('onDrop')"
+			>
+
+			<treerow>
+				<treecell label="@load(element.description)" sclass="@load(element.sclass)"/>
+			</treerow>
+		</treeitem>
+	</template>
+</tree>

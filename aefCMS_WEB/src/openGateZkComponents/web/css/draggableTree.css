@@ -1,0 +1,20 @@
+
+.spacerClass {
+	border: solid 1px blue;
+	max-height: 3px;
+	line-height: 3px;
+	height: 3px;
+}
+ 
+ .spacerClass .z-treecell-content {
+ 	line-height: 3px;
+	max-height: 3px;
+	height: 3px;
+	padding: 3px; 
+}
+
+.spacerClass .z-tree-line {
+	line-height: 3px;
+	max-height: 3px;
+	height: 3px;
+}
