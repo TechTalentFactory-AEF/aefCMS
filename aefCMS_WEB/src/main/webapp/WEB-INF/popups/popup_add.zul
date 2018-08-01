@@ -18,9 +18,10 @@
 	
 	<!-- VARIABLE FORM -->
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
+	<space/>
 	
 	<!-- FINAL COMMAND BUTTON -->
 	<hbox>
-		<button label="ADD" onClick="@command('saveElement')"/>
+		<button label="ADD" onClick="@command('addElement')"/>
 	</hbox>
 </window>

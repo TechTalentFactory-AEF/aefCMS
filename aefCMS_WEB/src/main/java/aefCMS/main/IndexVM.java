@@ -25,12 +25,14 @@ public class IndexVM {
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
 	
-	//ATTRIBUTES
+	//TOOLS
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
 	
 	private List<String> libraryElementList;
+	
+	//ZK ATTRIBUTES
 	
 	private PageTree model;
 	
@@ -39,6 +41,8 @@ public class IndexVM {
 	
 	private String selectedPopupType;
 	private String selectedLibraryElement;
+	
+	Map<String, String> attributesHashMap = new HashMap<String, String>();
 	
 	//GETTERS SETTERS
 	
@@ -96,6 +100,14 @@ public class IndexVM {
 		return path;
 	}
 	
+	public Map<String, String> getAttributesHashMap() {
+		return attributesHashMap;
+	}
+
+	public void setAttributesHashMap(Map<String, String> attributesHashMap) {
+		this.attributesHashMap = attributesHashMap;
+	}
+	
 	//INITIALIZATION
 
 	@Init
@@ -129,6 +141,13 @@ public class IndexVM {
 		selectedPopupType = null;
 	}
 	
+	//TREES OPERATIONS
+	
+	@Command
+	public void saveElement() {
+		System.out.println("SAVE");
+	}
+	
 	//UTILITIES
 	
 	//TODO CHANGE
@@ -145,7 +164,7 @@ public class IndexVM {
 	
 	
 	
-	/*****************************************************************************************/
+/*****************************************************************************************/
 	
 	
 //	private DraggableTreeCmsElement root;
