@@ -144,8 +144,8 @@ public class IndexVM {
 	//TREES OPERATIONS
 	
 	@Command
-	public void saveElement() {
-		System.out.println("SAVE");
+	public void addElement() {
+		System.out.println("ADD");
 	}
 	
 	//UTILITIES
