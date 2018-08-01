@@ -1,4 +1,4 @@
-package aefCMS.aefCMS_WEB;
+package aefCMS.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,63 +7,199 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.WebApps;
-import org.zkoss.zk.ui.util.Clients;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
+import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
-	private final String CONTEXT_PATH = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
+	//PATHS
 	
-	private final String LIBRARY_PATH = 	  CONTEXT_PATH + "WEB-INF/cms_library";
-	private final String PAGETREE_SAVEFILE =  CONTEXT_PATH + "saved_pagetree/pageTree.json";
+	private final String CONTEXT_PATH 	   = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
+	private final String REL_LIBRARY_PATH  = "WEB-INF/cms_library";
+	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
+	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
+	
+	//TOOLS
 	
 	private Library lib;
+	private HtmlRenderer iframeRenderer;
+	
+	private List<String> libraryElementList;
+	
+	//ZK ATTRIBUTES
 	
 	private PageTree model;
 	
+	private DraggableTreeModel draggableTreeModel;
+	private DraggableTreeElementPlus draggableSelectedElement;
+	
+	private String selectedPopupType;
+	private String selectedLibraryElement;
+	
+	Map<String, String> attributesHashMap = new HashMap<String, String>();
+	
 	//GETTERS SETTERS
 	
-	public PageTree getModel() {
-		
-		if (model == null) {
-			Map<String, String> stdPageAttributes = new HashMap<String, String>();
-			stdPageAttributes.put("title", "My Web Page");
-			
-			PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-			model = new PageTree(stdPage);
+	public List<String> getLibraryElementList() {		
+		if (libraryElementList == null) {
+			libraryElementList = new ArrayList<String>();
+			for(LibraryElement libEl : lib.getElements())
+				libraryElementList.add(libEl.getName());
+			libraryElementList.sort(null);	
 		}
+		return libraryElementList;
+	}
+	
+	//TODO STUB
+	public DraggableTreeModel getDraggableTreeModel() {
 		
-		return model;
+		/////TODO DELETE THIS
+		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+		stdPageAttributes.put("title", "My Web Page");
+		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+		/////
+		
+		PageElement root = model.getRoot();
+		DraggableTreeElementPlus draggableTreeRoot = new DraggableTreeElementPlus(null, "stdPage", stdPage);
+		if (root.getChildren().size() > 0) {
+			for (PageElement child : root.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeRoot);
+			}
+		}
+		draggableTreeRoot.recomputeSpacersRecursive();
+		return new DraggableTreeModel(draggableTreeRoot);
+	}
+	
+	public DraggableTreeElementPlus getDraggableSelectedElement() {
+		return draggableSelectedElement;
+	}
+
+	public void setDraggableSelectedElement(DraggableTreeElementPlus draggableSelectedElement) {
+		this.draggableSelectedElement = draggableSelectedElement;
+	}
+	
+	public String getSelectedPopupPath() {
+		String path = null;
+		if (selectedPopupType != null)
+			path = POPUPS_PATH + selectedPopupType + ".zul";	
+		return path;
+	}
+	
+	public String getSelectedLibraryElement() {
+		return selectedLibraryElement;
+	}
+	
+	@NotifyChange({"selectedLibraryElementZul","attributesHashMap"})
+	public void setSelectedLibraryElement(String selectedLibraryElement) {
+		this.selectedLibraryElement = selectedLibraryElement;
+		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
+	}
+	
+	public String getSelectedLibraryElementZul() {
+		String path = null;
+		if (selectedLibraryElement != null)
+			path = REL_LIBRARY_PATH + "/" + selectedLibraryElement + "/" + "mask.zul";
+		return path;
+	}
+	
+	public Map<String, String> getAttributesHashMap() {
+		return attributesHashMap;
+	}
+
+	public void setAttributesHashMap(Map<String, String> attributesHashMap) {
+		this.attributesHashMap = attributesHashMap;
 	}
 	
 	//INITIALIZATION
-	
+
 	@Init
-	public void init() throws IOException {
-		lib = new Library(new File(LIBRARY_PATH));
+	@NotifyChange("draggableTreeModel")
+	public void init() throws IOException, Exception {
+		
+		lib = new Library(new File(ABS_LIBRARY_PATH));
+		
+		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
+		
+		//TODO DRAFT
+		//init pageTree
+		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+		stdPageAttributes.put("title", "My Web Page");
+		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+		model = new PageTree(stdPage);
+		
 	}
 	
+	//POPUPS
 	
+	@Command
+	@NotifyChange("selectedPopupPath")
+	public void openPopup(@BindingParam("popupType") String popupType) {
+		selectedPopupType = popupType;
+	}
 	
+	@Command
+	@NotifyChange({"selectedPopupPath", "selectedLibraryElement"})
+	public void closePopup() {
+		selectedPopupType = null;
+		selectedLibraryElement = null;   //clean it otherwise, when you open again the add popup, the old type will be already selected
+		
+	}
 	
+	//TREES OPERATIONS
 	
+	//TODO TOFIX
+	@Command
+	@NotifyChange("draggableTreeModel")
+	public void addElement() {
+		PageElement pageElement = new PageElement(draggableSelectedElement.getPageElement(), lib.getElement(selectedLibraryElement), attributesHashMap );		
+		new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, pageElement);
+		draggableTreeRoot.recomputeSpacersRecursive();
+		model.print();	//DEBUG
+	}
+	
+	//TODO TOFIX
+	@Command
+	@NotifyChange("draggableTreeModel")
+	public void removeElement() {
+		draggableSelectedElement.getPageElement().getParent().getChildren().remove(draggableSelectedElement.getPageElement());
+		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
+		draggableTreeRoot.recomputeSpacersRecursive();
+		draggableSelectedElement = null;
+		model.print();	//DEBUG
+	}
+	
+	//TODO TOFIX
+	@Command
+	@NotifyChange("draggableTreeModel")
+	public void editElement() {
+		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);
+		model.print();	//DEBUG
+	}
+	
+	//UTILITIES
+	
+	//TODO CHANGE
+	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
+		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
+		if (node.getChildren().size() > 0) {
+			for (PageElement child : node.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeNode);
+			}
+		}
+	}
 }
 	
 	
 	
 	
-	/*****************************************************************************************/
+/*****************************************************************************************/
 	
 	
 //	private DraggableTreeCmsElement root;

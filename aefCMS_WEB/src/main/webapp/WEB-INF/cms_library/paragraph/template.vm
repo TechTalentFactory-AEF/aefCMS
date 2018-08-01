@@ -1,1 +1,1 @@
-<p style="color: $!{p-text-color}">$!{p-text}</p>
+<p style="color: $!{text-color}; font-size: $!{text-size}px;">$!{text}</p>

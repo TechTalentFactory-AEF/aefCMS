@@ -1,1 +1,1 @@
-<h1>$!{h-text}</h1>
+<h1 style="color: $!{text-color};">$!{text}</h1>

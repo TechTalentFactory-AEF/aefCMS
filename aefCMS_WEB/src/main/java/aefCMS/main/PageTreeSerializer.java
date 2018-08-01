@@ -1,4 +1,4 @@
-package aefCMS.aefCMS_WEB;
+package aefCMS.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
