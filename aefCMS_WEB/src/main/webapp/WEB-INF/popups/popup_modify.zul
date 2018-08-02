@@ -1,27 +1,25 @@
-<window title="Add Element"
+<window title="Modify Element"
     	mode="modal" 
 	    width="60%"
     	height="70%"
     	contentStyle="overflow:auto;"
  		style="padding: 0;">
 	
-	<!-- SELECT MENU -->
+	<!-- TITLE -->
 	<hbox>
-		<listbox model="@load(IndexVm.libraryElementList)" 
-				 selectedItem="@bind(IndexVm.selectedLibraryElement)"
-			  	 width="100%"
-			  	 rows="1"
-			  	 mold="select"/>
+		<label value="Element type: "/>
+		<label value="@load(IndexVm.selectedLibraryElement)"/>
+		<space/>
 		<button label="Close Popup" onClick="@command('closePopup')"/>
 	</hbox>
 	<space/>
 	
-	<!-- VARIABLE FORM -->
+	<!-- FORM -->
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
 	<space/>
-
+	
 	<!-- FINAL COMMAND BUTTON -->
 	<hbox visible="@load(not empty IndexVm.selectedLibraryElement)">
-		<button label="ADD" onClick="@command('addElement')"/>
-	</hbox>
+		<button label="UPDATE" onClick="@command('editElement')"/>
+	</hbox>	
 </window>

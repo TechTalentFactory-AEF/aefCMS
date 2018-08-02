@@ -96,7 +96,7 @@ public class IndexVM {
 		return selectedLibraryElement;
 	}
 	
-	@NotifyChange({"selectedLibraryElementZul","attributesHashMap"})
+	@NotifyChange({"selectedLibraryElement","selectedLibraryElementZul","attributesHashMap"})
 	public void setSelectedLibraryElement(String selectedLibraryElement) {
 		this.selectedLibraryElement = selectedLibraryElement;
 		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
@@ -139,9 +139,11 @@ public class IndexVM {
 	//POPUPS
 	
 	@Command
-	@NotifyChange("selectedPopupPath")
+	@NotifyChange({"selectedPopupPath", "selectedLibraryElementZul"})
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopupType = popupType;
+		if (popupType.equals("modify"))
+			selectedLibraryElement = draggableSelectedElement.getPageElement().getType().getName();
 	}
 	
 	@Command
