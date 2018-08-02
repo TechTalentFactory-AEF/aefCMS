@@ -182,11 +182,12 @@ public class IndexVM {
 		model.print();	//DEBUG
 	}
 	
-	//TODO TOFIX
 	@Command
-	@NotifyChange("draggableTreeModel")
 	public void editElement() {
 		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);
+		
+		closePopup();
+		
 		model.print();	//DEBUG
 	}
 	
