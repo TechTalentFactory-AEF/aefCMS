@@ -97,6 +97,10 @@ public class IndexVM {
 		return draggableTreeModel; 
 	}
 	
+	public DraggableTreeElementPlus getDraggableTreeRoot() {
+		return draggableTreeRoot;
+	}
+	
 	public DraggableTreeElementPlus getDraggableSelectedElement() {
 		return draggableSelectedElement;
 	}
