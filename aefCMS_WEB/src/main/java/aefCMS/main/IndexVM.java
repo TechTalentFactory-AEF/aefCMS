@@ -141,11 +141,13 @@ public class IndexVM {
 	}
 	
 	@Command
-	@NotifyChange({"selectedPopupPath", "selectedLibraryElement"})
+	//calls NotifyChange procedurally, otherwise the notifications wouldn't happen when closePopup() is called not from the zul but from other methods
 	public void closePopup() {
 		selectedPopupType = null;
-		selectedLibraryElement = null;   //clean it otherwise, when you open again the add popup, the old type will be already selected
+		selectedLibraryElement = null;   //if we don't clean it, when you open again the add popup, the old type will be already selected
 		
+		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
+		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");	
 	}
 	
 	//TREES OPERATIONS
@@ -158,23 +160,25 @@ public class IndexVM {
 		
 		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
-		draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		
+		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
-		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
-		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");
 		
 		model.print();	//DEBUG
 	}
 	
-	//TODO TOFIX
 	@Command
-	@NotifyChange("draggableTreeModel")
+	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void removeElement() {
 		model.removeElement(draggableSelectedElement.getPageElement());
+		
 		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
-		((DraggableTreeElementPlus) draggableTreeModel.getRoot()).recomputeSpacersRecursive();
-		draggableSelectedElement = null;
+		draggableTreeRoot.recomputeSpacersRecursive();
+		
+		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
+		//TODO the father should be the selected element after the removal
+		closePopup();
+		
 		model.print();	//DEBUG
 	}
 	
