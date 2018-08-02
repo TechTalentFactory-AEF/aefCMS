@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -46,6 +47,7 @@ public class IndexVM {
 	private PageTree model;
 	
 	private DraggableTreeModel draggableTreeModel;
+	private DraggableTreeElementPlus draggableTreeRoot;
 	private DraggableTreeElementPlus draggableSelectedElement;
 	
 	private String selectedPopupType;
@@ -91,7 +93,12 @@ public class IndexVM {
 		}
 		
 		draggableTreeRoot.recomputeSpacersRecursive();
-		return new DraggableTreeModel(draggableTreeRoot);
+    draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
+		return draggableTreeModel; 
+	}
+	
+	public DraggableTreeElementPlus getDraggableTreeRoot() {
+		return draggableTreeRoot;
 	}
 	
 	public DraggableTreeElementPlus getDraggableSelectedElement() {
@@ -146,6 +153,12 @@ public class IndexVM {
 		
 		//TODO DRAFT
 		//init pageTree
+  		//TODO STUB
+		  
+//		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+//		stdPageAttributes.put("title", "My Web Page");
+//		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+//		model = new PageTree(stdPage);
 //		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 //		stdPageAttributes.put("title", "My Web Page");
 //		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
@@ -182,41 +195,53 @@ public class IndexVM {
 	}
 	
 	@Command
-	@NotifyChange({"selectedPopupPath", "selectedLibraryElement"})
+	//calls NotifyChange procedurally, otherwise the notifications wouldn't happen when closePopup() is called not from the zul but from other methods
 	public void closePopup() {
 		selectedPopupType = null;
-		selectedLibraryElement = null;   //clean it otherwise, when you open again the add popup, the old type will be already selected
+		selectedLibraryElement = null;   //if we don't clean it, when you open again the add popup, the old type will be already selected
 		
+		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
+		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");	
 	}
 	
 	//TREES OPERATIONS
 	
-	//TODO TOFIX
 	@Command
-	@NotifyChange("draggableTreeModel")
+	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void addElement() {
-		PageElement pageElement = new PageElement(draggableSelectedElement.getPageElement(), lib.getElement(selectedLibraryElement), attributesHashMap );		
-		new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, pageElement);
+		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);
+		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
+		
+		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
+		
+		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
+		closePopup();
+		
 		model.print();	//DEBUG
 	}
 	
-	//TODO TOFIX
 	@Command
-	@NotifyChange("draggableTreeModel")
+	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void removeElement() {
-		draggableSelectedElement.getPageElement().getParent().getChildren().remove(draggableSelectedElement.getPageElement());
+		model.removeElement(draggableSelectedElement.getPageElement());
+		
 		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
 		draggableTreeRoot.recomputeSpacersRecursive();
-		draggableSelectedElement = null;
+		
+		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
+		//TODO the father should be the selected element after the removal
+		closePopup();
+		
 		model.print();	//DEBUG
 	}
 	
-	//TODO TOFIX
 	@Command
-	@NotifyChange("draggableTreeModel")
 	public void editElement() {
 		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);
+		
+		closePopup();
+		
 		model.print();	//DEBUG
 	}
 	

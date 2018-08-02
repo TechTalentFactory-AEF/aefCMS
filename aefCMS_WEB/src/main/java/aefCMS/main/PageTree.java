@@ -39,8 +39,8 @@ public class PageTree {
 		addElement(element, newParent, newSiblingsPosition);
 	}
 	
-	public static void updateElement (PageElement oldElement, Map<String,String> newParameters) {
-		oldElement.setParameters(newParameters);
+	public static void updateElement (PageElement element, Map<String,String> newParameters) {
+		element.setParameters(newParameters);
 	}
 	
 	//PRINT TREE
