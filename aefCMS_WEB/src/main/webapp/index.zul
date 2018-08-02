@@ -2,17 +2,6 @@
 
 <zk>
 	<style>
-		.right_align{
-	    	position: absolute;
-    		right: 0px;
-    		padding: 50px 10px 10px 10px;
-			vertical-align: middle;
-<!-- 			display:inline-block; -->
-		}
-		.button-bar{
-			vertical-align: bottom;
-		
-		}
 		.iFrame{
 			border-style: solid;
 			border-color: #d8d8d8;
@@ -49,50 +38,24 @@
 				</div>
 			</west>
 
-						<center border="0" vflex="1">
-				<div vflex="1">
-					<!-- TREE --> 
-					<vlayout>
+			<center border="0" vflex="1" >
+					<vlayout vflex="1" >
 						<div align="center" vflex="1" >
-							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1"/>
+							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1" style="overflow:auto;"/>
 						</div>
-						<space></space>
-						<div sclass="right_align">
-							<hbox>
-								<button height="40px" label="100%" onClick="@command('resizeIFrame', width='100%')"/>
-								<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', width='576px')"/>
-								<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', width='768px')"/>
-								<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	
-								<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	
-							</hbox>
-							</div>
-					</vlayout>
-	
-					<!-- POPUP --> 
-					<include src="@load(IndexVm.selectedPopupPath)"/>
-				</div>
-			</center>	
-
-<!-- 			<center vflex="1"  autoscroll="true" border="0"> -->
-				
-<!-- 					<vbox vflex="1" align="right"> -->
-<!-- 						<div align="center" vflex="1" > -->
-<!-- 							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1"/> -->
-<!-- 						</div> -->
-<!-- 						<space></space> -->
-<!-- 						<div sclass="right_align"> -->
-<!-- 							<hbox> -->
-<!-- 								<button height="40px" label="100%" onClick="@command('resizeIFrame', width='100%')"/> -->
-<!-- 								<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', width='576px')"/> -->
-<!-- 								<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', width='768px')"/> -->
-<!-- 								<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	 -->
-<!-- 								<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	 -->
-<!-- 							</hbox> -->
+						<hbox width="100%" pack="end" >
+						 	<button height="40px" label="Export Html" onClick="@command('exportHtml')"/>
+							<space hflex="1"></space> 							
+							<button height="40px" label="Full Size" onClick="@command('resizeIFrame', width='100%')"/>
+							<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', width='576px')"/>
+							<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', width='768px')"/>
+							<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	
+							<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	
+						</hbox>
 							
-<!-- 				</div> --> 
-<!-- 					</vbox> -->
-<!-- 			</center> -->
-			
+					</vlayout>
+			</center>	
+	
 		</borderlayout>
 
 	</window>

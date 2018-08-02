@@ -1,6 +1,7 @@
 package aefCMS.main;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zul.Filedownload;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
@@ -33,6 +35,7 @@ public class IndexVM {
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
 	private final String SAVE_P_TREE_PATH  = CONTEXT_PATH + "WEB-INF/saved_page_tree.json";
+	private final String OUT_WEBPAGE_PATH  = CONTEXT_PATH + "outputWebSite/index.html";   //WARNING if you change this one, you'll need to change it inside "index.zul" too
 
 	//TOOLS
 	
@@ -234,6 +237,12 @@ public class IndexVM {
 		iframeWidth = width;
 	}
 	
+	// EXPORT HTML
+	@Command
+	public void exportHtml () throws FileNotFoundException {
+		File fileToSave = new File(OUT_WEBPAGE_PATH);
+		Filedownload.save(fileToSave, "text/html");
+	}
 	
 	//UTILITIES
 	
