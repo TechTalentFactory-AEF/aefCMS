@@ -1,21 +1,27 @@
 package aefCMS.main;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.velocity.exception.ParseErrorException;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zk.ui.util.Clients;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
-import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
@@ -26,26 +32,25 @@ public class IndexVM {
 	private final String REL_LIBRARY_PATH  = "WEB-INF/cms_library";
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
+	private final String OUT_WEBPAGE_PATH  = CONTEXT_PATH + "outputWebSite/index.html";		//WARNING if you change this one, you'll need to change it inside "index.zul" too
 	
-	//TOOLS
+	//ASSETS
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
-	
-	private List<String> libraryElementList;
+	private PageTree model;
+	private Writer outputWebSite;
 	
 	//ZK ATTRIBUTES
-	
-	private PageTree model;
 	
 	private DraggableTreeModel draggableTreeModel;
 	private DraggableTreeElementPlus draggableTreeRoot;
 	private DraggableTreeElementPlus draggableSelectedElement;
 	
 	private String selectedPopupType;
+	private List<String> libraryElementList;
 	private String selectedLibraryElement;
-	
-	Map<String, String> attributesHashMap = new HashMap<String, String>();
+	private Map<String, String> attributesHashMap = new HashMap<String, String>();
 	
 	//GETTERS SETTERS
 	
@@ -117,6 +122,7 @@ public class IndexVM {
 	
 	//INITIALIZATION
 
+	//TODO STUB
 	@Init
 	@NotifyChange("draggableTreeModel")
 	public void init() throws IOException, Exception {
@@ -125,14 +131,30 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		//TODO STUB
 		//init pageTree model
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 		stdPageAttributes.put("title", "My Web Page");
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
 		model = new PageTree(stdPage);
 		
+//		outputWebSite = new FileWriter(new File(OUT_WEBPAGE_PATH));
+//		outputWebSite.write(iframeRenderer.render(model).toString());
+//		File f = new File(OUT_WEBPAGE_PATH);
+//		System.out.println(f);
+//		FileUtils.writeStringToFile(f, iframeRenderer.render(model).toString(), "UTF-8"); 
+//		forceIframeRefresh();
+		
 	}
+	
+//	File f;
+//	
+//	@AfterCompose
+//	public void after() throws ResourceNotFoundException, ParseErrorException, IOException, Exception {
+//		f = new File(OUT_WEBPAGE_PATH);
+//		System.out.println(f);
+//		FileUtils.writeStringToFile(f, iframeRenderer.render(model).toString(), "UTF-8"); 
+//		forceIframeRefresh();
+//	}
 	
 	//POPUPS
 	
@@ -158,12 +180,17 @@ public class IndexVM {
 	
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
-	public void addElement() {
+	public void addElement() throws ResourceNotFoundException, ParseErrorException, Exception {
 		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);
 		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
 		
 		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
+
+//TODO
+//		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+//		outputWebSite.write(outputWebSiteHtml.toString());
+//		forceIframeRefresh();
 		
 		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
@@ -197,15 +224,21 @@ public class IndexVM {
 	
 	//UTILITIES
 	
-	//TODO CHANGE
-	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
-		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
-		if (node.getChildren().size() > 0) {
-			for (PageElement child : node.getChildren()) {
-				createDraggableTreeElement(child, draggableTreeNode);
-			}
-		}
+//	//TODO CHANGE
+//	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
+//		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
+//		if (node.getChildren().size() > 0) {
+//			for (PageElement child : node.getChildren()) {
+//				createDraggableTreeElement(child, draggableTreeNode);
+//			}
+//		}
+//	}
+	
+	private void forceIframeRefresh() {	
+		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
+		System.out.println("**DEBUG** Forced Iframe refresh.");
 	}
+	
 }
 	
 	

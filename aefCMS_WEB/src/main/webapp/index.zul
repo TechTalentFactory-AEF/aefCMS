@@ -27,14 +27,12 @@
 					<include src="@load(IndexVm.selectedPopupPath)"/>
 				</div>
 			</west>
-			<!--
+
 			<center>
-				 GENERATED PAGE 
-				<iframe id="ifrInsideZk" src="generated-page.html" hflex="1" vflex="1"/>
+				<!-- GENERATED PAGE --> 
+				<iframe id="ifrInsideZk" src="outputWebSite/index.html" hflex="1" vflex="1"/>
 			</center>
-			 -->
 			
 		</borderlayout>
-
 	</window>
 </zk>
