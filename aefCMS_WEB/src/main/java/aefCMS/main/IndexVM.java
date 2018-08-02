@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -38,6 +39,7 @@ public class IndexVM {
 	private PageTree model;
 	
 	private DraggableTreeModel draggableTreeModel;
+	private DraggableTreeElementPlus draggableTreeRoot;
 	private DraggableTreeElementPlus draggableSelectedElement;
 	
 	private String selectedPopupType;
@@ -58,23 +60,15 @@ public class IndexVM {
 	}
 	
 	//TODO STUB
-	public DraggableTreeModel getDraggableTreeModel() {
-		
-		/////TODO DELETE THIS
-		Map<String, String> stdPageAttributes = new HashMap<String, String>();
-		stdPageAttributes.put("title", "My Web Page");
-		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-		/////
-		
-		PageElement root = model.getRoot();
-		DraggableTreeElementPlus draggableTreeRoot = new DraggableTreeElementPlus(null, "stdPage", stdPage);
-		if (root.getChildren().size() > 0) {
-			for (PageElement child : root.getChildren()) {
-				createDraggableTreeElement(child, draggableTreeRoot);
-			}
+	public DraggableTreeModel getDraggableTreeModel() {	
+		if (draggableTreeModel == null) {
+			//init draggableTree using PageTree model data
+			PageElement modelRoot = model.getRoot();
+			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot);
+			draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
+			draggableTreeRoot.recomputeSpacersRecursive();
 		}
-		draggableTreeRoot.recomputeSpacersRecursive();
-		return new DraggableTreeModel(draggableTreeRoot);
+		return draggableTreeModel;
 	}
 	
 	public DraggableTreeElementPlus getDraggableSelectedElement() {
@@ -127,8 +121,8 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		//TODO DRAFT
-		//init pageTree
+		//TODO STUB
+		//init pageTree model
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 		stdPageAttributes.put("title", "My Web Page");
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
@@ -156,13 +150,20 @@ public class IndexVM {
 	
 	//TREES OPERATIONS
 	
-	//TODO TOFIX
 	@Command
-	@NotifyChange("draggableTreeModel")
+	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void addElement() {
-		PageElement pageElement = new PageElement(draggableSelectedElement.getPageElement(), lib.getElement(selectedLibraryElement), attributesHashMap );		
-		new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, pageElement);
+		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);
+		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
+		
+		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
+		draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
+		
+		closePopup();
+		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
+		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");
+		
 		model.print();	//DEBUG
 	}
 	
@@ -170,9 +171,9 @@ public class IndexVM {
 	@Command
 	@NotifyChange("draggableTreeModel")
 	public void removeElement() {
-		draggableSelectedElement.getPageElement().getParent().getChildren().remove(draggableSelectedElement.getPageElement());
+		model.removeElement(draggableSelectedElement.getPageElement());
 		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
-		draggableTreeRoot.recomputeSpacersRecursive();
+		((DraggableTreeElementPlus) draggableTreeModel.getRoot()).recomputeSpacersRecursive();
 		draggableSelectedElement = null;
 		model.print();	//DEBUG
 	}
