@@ -51,4 +51,8 @@ public class HtmlRenderer {
 		return peOutput.getBuffer();
 	}
 	
+	public StringBuffer render(PageTree tree) throws ResourceNotFoundException, ParseErrorException, Exception {
+		return render(tree.getRoot());
+	}
+	
 }
