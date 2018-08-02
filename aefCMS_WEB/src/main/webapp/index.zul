@@ -1,4 +1,26 @@
+<?page title="Html Generator"?>
+
 <zk>
+	<style>
+		.right_align{
+	    	position: absolute;
+    		right: 0px;
+    		padding: 50px 10px 10px 10px;
+			vertical-align: middle;
+<!-- 			display:inline-block; -->
+		}
+		.button-bar{
+			vertical-align: bottom;
+		
+		}
+		.iFrame{
+			border-style: solid;
+			border-color: #d8d8d8;
+			border-width: 1px;
+		}
+		
+	</style>
+	
 	<window apply="org.zkoss.bind.BindComposer"
 			viewModel="@id('IndexVm') @init('aefCMS.main.IndexVM')"
 			validationMessages="@id('indexVmMsgs')"
@@ -7,32 +29,69 @@
 	
 		<borderlayout>
 		
-			<north border="0">
-				<!-- TITLE --> 
-				<label value="Welcome to this simple Html Page Generator"/>
-			</north>
-			
-			<west size="25%">
-				<div>
+			<west size="20%" border="0" vflex="1">
+				<div vflex="1">
 					<!-- TREE --> 
-					<hbox id="editableTree">
-						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
-						<space/>
-						<button iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
-						<button iconSclass="z-icon-minus" disabled="@load(empty IndexVm.draggableSelectedElement or (IndexVm.draggableSelectedElement eq IndexVm.draggableTreeRoot))" onClick="@command('openPopup', popupType='remove')"/>
-						<button iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>
-					</hbox>
+					<vlayout id="editableTree" vflex="1">
+						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)" vflex="1"  style="overflow:auto;"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
+						<space></space>
+						<div sclass="button-bar" align="center">
+							<hlayout>
+								<button height="40px" iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
+								<button height="40px" iconSclass="z-icon-minus" disabled="@load(empty IndexVm.draggableSelectedElement or (IndexVm.draggableSelectedElement eq IndexVm.draggableTreeRoot))" onClick="@command('openPopup', popupType='remove')"/>
+								<button height="40px" iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>	
+							</hlayout>
+						</div>
+					</vlayout>
 	
 					<!-- POPUP --> 
 					<include src="@load(IndexVm.selectedPopupPath)"/>
 				</div>
 			</west>
-			<!--
-			<center>
-				 GENERATED PAGE 
-				<iframe id="ifrInsideZk" src="generated-page.html" hflex="1" vflex="1"/>
-			</center>
-			 -->
+
+						<center border="0" vflex="1">
+				<div vflex="1">
+					<!-- TREE --> 
+					<vlayout>
+						<div align="center" vflex="1" >
+							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1"/>
+						</div>
+						<space></space>
+						<div sclass="right_align">
+							<hbox>
+								<button height="40px" label="100%" onClick="@command('resizeIFrame', width='100%')"/>
+								<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', width='576px')"/>
+								<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', width='768px')"/>
+								<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	
+								<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	
+							</hbox>
+							</div>
+					</vlayout>
+	
+					<!-- POPUP --> 
+					<include src="@load(IndexVm.selectedPopupPath)"/>
+				</div>
+			</center>	
+
+<!-- 			<center vflex="1"  autoscroll="true" border="0"> -->
+				
+<!-- 					<vbox vflex="1" align="right"> -->
+<!-- 						<div align="center" vflex="1" > -->
+<!-- 							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1"/> -->
+<!-- 						</div> -->
+<!-- 						<space></space> -->
+<!-- 						<div sclass="right_align"> -->
+<!-- 							<hbox> -->
+<!-- 								<button height="40px" label="100%" onClick="@command('resizeIFrame', width='100%')"/> -->
+<!-- 								<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', width='576px')"/> -->
+<!-- 								<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', width='768px')"/> -->
+<!-- 								<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	 -->
+<!-- 								<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	 -->
+<!-- 							</hbox> -->
+							
+<!-- 				</div> --> 
+<!-- 					</vbox> -->
+<!-- 			</center> -->
 			
 		</borderlayout>
 

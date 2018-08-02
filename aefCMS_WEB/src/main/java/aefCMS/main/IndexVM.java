@@ -38,6 +38,7 @@ public class IndexVM {
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
+	private String iframeWidth;
 	
 	private List<String> libraryElementList;
 	
@@ -130,6 +131,14 @@ public class IndexVM {
 		this.attributesHashMap = attributesHashMap;
 	}
 	
+	public String getIframeWidth() {
+		return iframeWidth;
+	}
+
+	public void setIframeWidth(String iframeWidth) {
+		this.iframeWidth = iframeWidth;
+	}
+	
 	//INITIALIZATION
 
 	@Init
@@ -140,6 +149,7 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
+		iframeWidth= "100%";
 		// try to reload pageTree from disk otherwise default page is created
 		try {
 			model = PageTreeSerializer.loadTreeFromDisc(SAVE_P_TREE_PATH, ABS_LIBRARY_PATH);
@@ -217,6 +227,14 @@ public class IndexVM {
 		model.print();	//DEBUG
 	}
 	
+	// IFRAME WIDTH
+	@Command
+	@NotifyChange("iframeWidth")
+	public void resizeIFrame (@BindingParam("width") String width) {
+		iframeWidth = width;
+	}
+	
+	
 	//UTILITIES
 	
 	//TODO CHANGE
@@ -228,6 +246,7 @@ public class IndexVM {
 			}
 		}
 	}
+	
 }
 	
 	
