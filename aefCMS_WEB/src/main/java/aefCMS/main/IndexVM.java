@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
@@ -14,11 +15,17 @@ import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.WebApps;
 
+import com.sun.istack.internal.logging.Logger;
+
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
+	
+	// LOGGER
+	
+	private static final Logger LOGGER = Logger.getLogger( IndexVM.class );
 	
 	//PATHS
 	
@@ -26,7 +33,8 @@ public class IndexVM {
 	private final String REL_LIBRARY_PATH  = "WEB-INF/cms_library";
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
-	
+	private final String SAVE_P_TREE_PATH  = CONTEXT_PATH + "WEB-INF/saved_page_tree.json";
+
 	//TOOLS
 	
 	private Library lib;
@@ -60,15 +68,33 @@ public class IndexVM {
 	}
 	
 	//TODO STUB
-	public DraggableTreeModel getDraggableTreeModel() {	
-		if (draggableTreeModel == null) {
-			//init draggableTree using PageTree model data
-			PageElement modelRoot = model.getRoot();
-			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot);
-			draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
-			draggableTreeRoot.recomputeSpacersRecursive();
+	public DraggableTreeModel getDraggableTreeModel() throws IOException {
+		
+		// try to reload pageTree from disk otherwise default page is created
+		try {
+			model = PageTreeSerializer.loadTreeFromDisc(SAVE_P_TREE_PATH, ABS_LIBRARY_PATH);
+			LOGGER.log( Level.INFO, "Loaded tree from disk");
 		}
-		return draggableTreeModel;
+		catch (Exception e){
+			Map<String, String> stdPageAttributes = new HashMap<String, String>();
+			stdPageAttributes.put("title", "My Web Page");
+			PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+			model = new PageTree(stdPage);
+			PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+			LOGGER.log( Level.INFO, "Default tree created and saved");
+		}
+				
+		PageElement root = model.getRoot();
+		DraggableTreeElementPlus draggableTreeRoot = new DraggableTreeElementPlus(null, root.getType().getName(), root);
+		if (root.getChildren().size() > 0) {
+			for (PageElement child : root.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeRoot);
+			}
+		}
+		
+		draggableTreeRoot.recomputeSpacersRecursive();
+    draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
+		return draggableTreeModel; 
 	}
 	
 	public DraggableTreeElementPlus getDraggableSelectedElement() {
@@ -121,13 +147,37 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		//TODO STUB
-		//init pageTree model
-		Map<String, String> stdPageAttributes = new HashMap<String, String>();
-		stdPageAttributes.put("title", "My Web Page");
-		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-		model = new PageTree(stdPage);
-		
+		//TODO DRAFT
+		//init pageTree
+  		//TODO STUB
+		  
+//		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+//		stdPageAttributes.put("title", "My Web Page");
+//		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+//		model = new PageTree(stdPage);
+//		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+//		stdPageAttributes.put("title", "My Web Page");
+//		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+//		Map<String, String> titlePageAttributes = new HashMap<String, String>();
+//		titlePageAttributes.put("text-color", "green");
+//		titlePageAttributes.put("text", "My title");
+//		PageElement title = new PageElement(lib.getElement("title"), titlePageAttributes);
+//		
+//		model = new PageTree(stdPage);
+//		model.addElement(title, stdPage);
+//		// save pageTree
+//		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+//		System.out.println("SavedPageTreeRoot");
+//		model.print();
+//		// Model edit
+//		model.removeElement(title);
+//		System.out.println("Edited model, not saved");
+//		model.print();
+//		// reload pageTree
+//		model = PageTreeSerializer.loadTreeFromDisc(SAVE_P_TREE_PATH, ABS_LIBRARY_PATH);
+//		System.out.println("Reload Saved PAgeTree");
+//		model.print();
+//				
 	}
 	
 	//POPUPS
