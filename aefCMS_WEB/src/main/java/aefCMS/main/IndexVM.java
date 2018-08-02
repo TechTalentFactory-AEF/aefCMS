@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
@@ -20,13 +22,18 @@ import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
+	// LOGGER
+	
+	private static final Logger logger = Logger.getLogger( IndexVM.class.getCanonicalName() );
+	
 	//PATHS
 	
 	private final String CONTEXT_PATH 	   = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
 	private final String REL_LIBRARY_PATH  = "WEB-INF/cms_library";
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
-	
+	private final String SAVE_P_TREE_PATH  = CONTEXT_PATH + "WEB-INF/saved_page_tree.json";
+
 	//TOOLS
 	
 	private Library lib;
@@ -60,14 +67,22 @@ public class IndexVM {
 	}
 	
 	//TODO STUB
-	public DraggableTreeModel getDraggableTreeModel() {	
-		if (draggableTreeModel == null) {
+	public DraggableTreeModel getDraggableTreeModel() throws IOException {	
+	
+		if (draggableTreeModel == null) {	
 			//init draggableTree using PageTree model data
 			PageElement modelRoot = model.getRoot();
 			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot);
+			
+			if (modelRoot.getChildren().size() > 0) {
+				for (PageElement child : modelRoot.getChildren()) {
+					createDraggableTreeElement(child, draggableTreeRoot);
+				}
+			}
 			draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
 			draggableTreeRoot.recomputeSpacersRecursive();
-		}
+		} 
+		
 		return draggableTreeModel;
 	}
 	
@@ -125,12 +140,19 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		//TODO STUB
-		//init pageTree model
-		Map<String, String> stdPageAttributes = new HashMap<String, String>();
-		stdPageAttributes.put("title", "My Web Page");
-		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-		model = new PageTree(stdPage);
+		// try to reload pageTree from disk otherwise default page is created
+		try {
+			model = PageTreeSerializer.loadTreeFromDisc(SAVE_P_TREE_PATH, ABS_LIBRARY_PATH);
+			logger.log( Level.INFO, "Loaded tree from disk");
+		}
+		catch (Exception e){
+			Map<String, String> stdPageAttributes = new HashMap<String, String>();
+			stdPageAttributes.put("title", "My Web Page");
+			PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+			model = new PageTree(stdPage);
+			PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+			logger.log( Level.INFO, "Default tree created and saved");
+		}
 		
 	}
 	
