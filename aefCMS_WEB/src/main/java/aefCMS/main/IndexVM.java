@@ -1,4 +1,3 @@
-//NEW MASTER
 package aefCMS.main;
 
 import java.io.File;
