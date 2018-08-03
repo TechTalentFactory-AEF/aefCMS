@@ -92,6 +92,30 @@ public class DraggableTreeElement{
 		return this==obj;
 	}
 	
+	protected void addAt(DraggableTreeElement spacer) {
+		//siblings
+		if (this.getParent().equals(spacer.getParent())) {
+			DraggableTreeElement parent=this.getParent();
+			parent.removeChild(this);
+			int index=parent.getChildren().indexOf(spacer);
+			parent.getChildren().add(index, this);
+			parent.recomputeSpacers();
+		}
+		else {
+			DraggableTreeComponent.removeFromParent(this);
+			int index=spacer.getParent().getChildren().indexOf(spacer);
+			spacer.getParent().getChildren().add(index, this);
+			spacer.getParent().recomputeSpacers();
+		}
+	}
+
+	protected void addTo(DraggableTreeElement newParent) {
+		DraggableTreeComponent.removeFromParent(this);
+		this.setParent(newParent);
+		newParent.getChildren().add(this);
+		newParent.recomputeSpacers();
+	}
+	
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//	GETTERS / SETTERS
