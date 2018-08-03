@@ -2,6 +2,7 @@ package aefCMS.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,13 +11,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.fileupload.FileUpload;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zul.Filedownload;
+import org.zkoss.zul.Fileupload;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Messagebox;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
@@ -36,7 +42,7 @@ public class IndexVM {
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
 	private final String SAVE_P_TREE_PATH  = CONTEXT_PATH + "WEB-INF/saved_page_tree.json";
 	private final String OUT_WEBPAGE_PATH  = CONTEXT_PATH + "outputWebSite/index.html";   //WARNING if you change this one, you'll need to change it inside "index.zul" too
-
+	private final String SAVE_IMAGE_PATH   = CONTEXT_PATH + "savedImages/";
 	//TOOLS
 	
 	private Library lib;
@@ -249,6 +255,39 @@ public class IndexVM {
 		Filedownload.save(fileToSave, "text/html");
 	}
 	
+	   
+	@Command  
+	@NotifyChange("*")
+    public void processMedia(@BindingParam ("media") Media media, @BindingParam ("shownImage") Image pics ) throws IOException {
+
+		if (media instanceof org.zkoss.image.Image) {
+			org.zkoss.image.Image img = (org.zkoss.image.Image) media;
+			if (img.getWidth() > img.getHeight()){
+				if (img.getHeight() > 300) {
+					pics.setHeight("300px");
+					pics.setWidth(img.getWidth() * 300 / img.getHeight() + "px");
+				}
+			}
+			if (img.getHeight() > img.getWidth()){
+				if (img.getWidth() > 400) {
+					pics.setWidth("400px");
+					pics.setHeight(img.getHeight() * 400 / img.getWidth() + "px");
+				}
+			}
+			
+			String saveLocation = SAVE_IMAGE_PATH+ media.getName();
+			File outputFile = new File(saveLocation);
+			FileOutputStream fos = new FileOutputStream(outputFile);
+			fos.write(media.getByteData());
+			fos.close();
+			attributesHashMap.put("background-image-path",saveLocation);
+			pics.setContent(img);
+			
+		} else {
+			Messagebox.show("Not an image: "+media, "Error", Messagebox.OK, Messagebox.ERROR);
+		}
+    }
+
 	//UTILITIES
 	
 	//TODO CHANGE
