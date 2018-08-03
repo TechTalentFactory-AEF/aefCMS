@@ -156,8 +156,9 @@ public class IndexVM {
 		System.out.println("**DEBUG** tempGeneratedWebSite: " + tempGeneratedWebSite);
 		tempGeneratedWebSite.deleteOnExit();
 		
-		//write initial html to file
-		saveWebSiteToFile(tempGeneratedWebSite, iframeRenderer.render(model));
+		//generate initial html and save it to file
+		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 	}	
 	
 	@AfterCompose
@@ -199,10 +200,9 @@ public class IndexVM {
 		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
 
-//TODO
-//		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-//		outputWebSite.write(outputWebSiteHtml.toString());
-//		forceIframeRefresh();
+		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		forceIframeRefresh();
 		
 		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
@@ -212,11 +212,15 @@ public class IndexVM {
 	
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
-	public void removeElement() {
+	public void removeElement() throws ResourceNotFoundException, ParseErrorException, Exception {
 		model.removeElement(draggableSelectedElement.getPageElement());
 		
 		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
 		draggableTreeRoot.recomputeSpacersRecursive();
+		
+		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		forceIframeRefresh();
 		
 		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
 		//TODO the father should be the selected element after the removal
@@ -226,8 +230,12 @@ public class IndexVM {
 	}
 	
 	@Command
-	public void editElement() {
+	public void editElement() throws ResourceNotFoundException, ParseErrorException, Exception {
 		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);
+		
+		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		forceIframeRefresh();
 		
 		closePopup();
 		
@@ -245,18 +253,7 @@ public class IndexVM {
 		System.out.println("**DEBUG** Forced Iframe refresh.");
 	}
 	
-}
-
-////TODO CHANGE
-//private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
-//	DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
-//	if (node.getChildren().size() > 0) {
-//		for (PageElement child : node.getChildren()) {
-//			createDraggableTreeElement(child, draggableTreeNode);
-//		}
-//	}
-//}
-	
+}	
 	
 /*****************************************************************************************/
 	
