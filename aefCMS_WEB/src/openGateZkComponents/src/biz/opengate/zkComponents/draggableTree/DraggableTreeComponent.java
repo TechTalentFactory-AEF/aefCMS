@@ -106,36 +106,12 @@ public class DraggableTreeComponent extends HtmlMacroComponent implements org.zk
 		///////////////////////////////////////////////////////////////////////
 		
 		if (dropped.getType()!=DraggableTreeElementType.SPACER) {
-			addTo(dragged, dropped);		
+			dragged.addTo(dropped);		
 			return true;	
 		}
 		
-		addAt(dragged, dropped);
+		dragged.addAt(dropped);
 		return false;
-	}
-
-	private void addAt(DraggableTreeElement element, DraggableTreeElement spacer) {
-		//siblings
-		if (element.getParent().equals(spacer.getParent())) {
-			DraggableTreeElement parent=element.getParent();
-			parent.removeChild(element);
-			int index=parent.getChildren().indexOf(spacer);
-			parent.getChildren().add(index, element);
-			parent.recomputeSpacers();
-		}
-		else {
-			removeFromParent(element);
-			int index=spacer.getParent().getChildren().indexOf(spacer);
-			spacer.getParent().getChildren().add(index, element);
-			spacer.getParent().recomputeSpacers();
-		}
-	}
-
-	private void addTo(DraggableTreeElement element, DraggableTreeElement newParent) {
-		removeFromParent(element);
-		element.setParent(newParent);
-		newParent.getChildren().add(element);
-		newParent.recomputeSpacers();
 	}
 
 	public static void removeFromParent(DraggableTreeElement element) {
