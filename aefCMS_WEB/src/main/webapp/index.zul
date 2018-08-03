@@ -18,12 +18,10 @@
 	
 		<borderlayout>
 		
-			<west size="20%" border="0" vflex="1">
+			<west size="20%" border="0" vflex="1" splittable="true" collapsible="true">
 				<div vflex="1">
 					<!-- TREE --> 
 					<vlayout id="editableTree" vflex="1">
-						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)" vflex="1"  style="overflow:auto;"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
-						<space></space>
 						<div sclass="button-bar" align="center">
 							<hlayout>
 								<button height="40px" iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
@@ -31,6 +29,7 @@
 								<button height="40px" iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>	
 							</hlayout>
 						</div>
+						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)" vflex="1"  style="overflow:auto;"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
 					</vlayout>
 	
 					<!-- POPUP --> 
@@ -40,9 +39,6 @@
 
 			<center border="0" vflex="1" >
 					<vlayout vflex="1" >
-						<div align="center" vflex="1" >
-							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1" style="overflow:auto;"/>
-						</div>
 						<hbox width="100%" pack="end" >
 						 	<button height="40px" label="Export Html" onClick="@command('exportHtml')"/>
 							<space hflex="1"></space> 							
@@ -52,8 +48,11 @@
 							<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	
 							<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	
 						</hbox>
-							
-					</vlayout>
+					
+						<div align="center" vflex="1" >
+							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1" style="overflow:auto;"/>
+						</div>
+						</vlayout>
 			</center>	
 	
 		</borderlayout>
