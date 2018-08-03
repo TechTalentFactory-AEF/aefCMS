@@ -190,6 +190,11 @@ public class IndexVM {
 	}
 	
 	//TREES OPERATIONS
+	@Command
+	public void movePageElement() {
+		
+		System.out.println("Prova");
+	}
 	
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})

@@ -1,0 +1,38 @@
+<hlayout>
+	<space></space>
+		<vbox>
+			<grid width="98%">
+	    		<columns>
+	    			<column hflex="min"/>
+	    			<column/>
+	    		</columns>
+	    		<rows>
+	    			<row>
+	    				Jumbo Title
+	    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-button-text'])" hflex="1"/>
+	    			</row>
+	    			<row>
+	    				Jumbo Paragraph
+	    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-button-text'])" hflex="1"/>
+	    			</row>
+	    			
+	    		</rows>
+	    	</grid>
+	    	<space></space>
+	    	<grid width="98%">
+	    		<columns>
+	    			<column hflex="min"/>
+	    			<column label="Name" style="text-align:center;"/>
+	    			<column label="Link" style="text-align:center;"/>
+	    		</columns>
+	    		<rows>
+	    			<row>
+	    				Button Options
+	    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-button-text'])" hflex="1"/>
+	    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-button-link'])" hflex="1"/>
+	    			</row>
+	  			
+	    		</rows>
+	    	</grid>
+	</vbox>	
+</hlayout>

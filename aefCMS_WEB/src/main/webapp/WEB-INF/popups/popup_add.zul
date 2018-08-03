@@ -1,9 +1,9 @@
 <window title="Add Element"
     	mode="modal" 
-	    width="60%"
+	    width="65%"
     	height="70%"
     	contentStyle="overflow:auto;"
- 		style="padding: 0;">
+		>
 	
 	<!-- SELECT MENU -->
 	<hbox>
@@ -22,6 +22,6 @@
 
 	<!-- FINAL COMMAND BUTTON -->
 	<hbox visible="@load(not empty IndexVm.selectedLibraryElement)">
-		<button label="ADD" onClick="@command('addElement')"/>
+			<button label="Add" onClick="@command('addElement')"/>
 	</hbox>
 </window>

@@ -1,0 +1,42 @@
+
+<hlayout>
+	<space></space>
+		<vbox>
+			<grid width="98%">
+	    		<columns>
+	    			<column label="Options" hflex="min"/>
+	    			<column label="Name" style="text-align:center;"/>
+	    			<column label="Link" style="text-align:center;"/>
+	    		</columns>
+	    		<rows>
+	    			<row>
+	    				Home 
+	    				<textbox value="@bind(IndexVm.attributesHashMap['home-page'])"  hflex="1"/>
+	    				<textbox value="@bind(IndexVm.attributesHashMap['home-link'])"  hflex="1"/>
+	    			</row>
+	    			<row>
+	    				First Button
+	    				<textbox value="@bind(IndexVm.attributesHashMap['first-page'])"  hflex="1"/>
+	    				<textbox value="@bind(IndexVm.attributesHashMap['first-link'])"  hflex="1"/>
+	    			</row>
+	    			<row>
+	    				Second Button
+	    				<textbox value="@bind(IndexVm.attributesHashMap['second-page'])" hflex="1"/>
+	    				<textbox value="@bind(IndexVm.attributesHashMap['second-link'])" hflex="1"/>
+	    			</row>
+	    			<row>
+	    			 	Navbar Style
+ 						<radiogroup selectedItem="@bind(IndexVm.attributesHashMap['navbar-color'])" style="text-align:center;">
+ 							<hbox>
+								<radio label="Dark" value="navbar-dark bg-dark"/>
+								<div style="background-color:#383B43; width:20px; height:20px;"><space></space></div>
+								<radio label="Light" value="navbar-light bg-light"/>
+								<div style="background-color:#F8F9Fa; width:20px; height:20px;"><space></space></div>
+ 							</hbox>
+						</radiogroup>
+						<space></space>
+	    			</row>
+	    		</rows>
+	    	</grid>
+	</vbox>	
+</hlayout>

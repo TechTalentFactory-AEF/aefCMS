@@ -29,7 +29,7 @@
 								<button height="40px" iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>	
 							</hlayout>
 						</div>
-						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)" vflex="1"  style="overflow:auto;"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
+							<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)" vflex="1" onDrop="@command('movePageElement')"  style="overflow:auto;"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
 					</vlayout>
 	
 					<!-- POPUP --> 
@@ -48,13 +48,11 @@
 							<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',width='992px')"/>	
 							<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', width='1200px')"/>	
 						</hbox>
-					
-						<div align="center" vflex="1" >
-							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1" style="overflow:auto;"/>
+						<div align="center" hflex="1" vflex="1" style="overflow-x:auto; overflow-y:hidden;">
+							<iframe sclass="iFrame" id="ifrInsideZk" src="generated-page.html" width="@load(IndexVm.iframeWidth)" vflex="1" style="overflow-y:auto;"/>
 						</div>
 						</vlayout>
 			</center>	
-	
 		</borderlayout>
 
 	</window>
