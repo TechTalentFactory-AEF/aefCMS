@@ -256,25 +256,20 @@ public class IndexVM {
 	}
 	
 	   
+	@SuppressWarnings("deprecation")
 	@Command  
 	@NotifyChange("*")
     public void processMedia(@BindingParam ("media") Media media, @BindingParam ("shownImage") Image pics ) throws IOException {
 
 		if (media instanceof org.zkoss.image.Image) {
 			org.zkoss.image.Image img = (org.zkoss.image.Image) media;
+			
 			if (img.getWidth() > img.getHeight()){
 				if (img.getHeight() > 300) {
 					pics.setHeight("300px");
 					pics.setWidth(img.getWidth() * 300 / img.getHeight() + "px");
 				}
 			}
-			if (img.getHeight() > img.getWidth()){
-				if (img.getWidth() > 400) {
-					pics.setWidth("400px");
-					pics.setHeight(img.getHeight() * 400 / img.getWidth() + "px");
-				}
-			}
-			
 			String saveLocation = SAVE_IMAGE_PATH+ media.getName();
 			File outputFile = new File(saveLocation);
 			FileOutputStream fos = new FileOutputStream(outputFile);

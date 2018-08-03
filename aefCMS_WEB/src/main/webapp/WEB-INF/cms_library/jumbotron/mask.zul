@@ -1,22 +1,26 @@
-
-	<vlayout>
-		<div style="valign:middle;">
-			Background Image
-			<button label="Upload" upload="true,maxsize=1000000" onUpload="@command('processMedia', media=event.media, shownImage=pics)">
-			</button>
-			<image id="pics" />
-			</div>
-				
+	<vlayout>		
 		<hlayout>
 			<space></space>
 				<vbox>
-					<space></space>
 					<grid width="98%">
 			    		<columns>
 			    			<column hflex="min"/>
 			    			<column/>
 			    		</columns>
 			    		<rows>
+			    			<row>
+			    				<div style="valign:middle;">
+			    					<vbox pack="middle" align="middle">
+										Background Image
+										<button label="Upload" upload="true,maxsize=10000" onUpload="@command('processMedia', media=event.media, shownImage=pics)"/>
+									</vbox>
+								</div>
+								<image id="pics"/>	
+			    			</row>
+			    			<row>
+	    						Image Height (px or %)
+	    						<textbox value="@bind(IndexVm.attributesHashMap['container-height'])" hflex="1"/>
+	    					</row>
 			    			<row>
 			    				Jumbo Title
 			    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-title'])" hflex="1"/>

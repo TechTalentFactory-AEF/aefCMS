@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm $!{navbar-color}">
+<nav class="navbar navbar-expand-md $!{navbar-color}">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample" aria-controls="navbarsExample" aria-expanded="false" aria-label="Toggle navigation">
 	<span class="navbar-toggler-icon"></span>
   </button>

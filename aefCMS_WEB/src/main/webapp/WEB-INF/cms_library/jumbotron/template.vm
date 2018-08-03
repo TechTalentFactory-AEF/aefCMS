@@ -1,5 +1,5 @@
-<div class="jumbotron" style="background-image: url('$!{background-image-path}'); text-align:center;">
-	<div class="container">
+<div class="jumbotron" style="background-image: url('$!{background-image-path}'); text-align:center; height:$!{container-height}px;">
+	<div class="container" style="height:$!{container-height}px;">
   		<h1 class="display-3">$!{jumbo-title}</h1>
  		 <p>$!{jumbo-text}</p>
  		 <p><a class="btn btn-primary btn-lg" href="$!{jumbo-button-link}" role="button">$!{jumbo-button-text}</a></p>
