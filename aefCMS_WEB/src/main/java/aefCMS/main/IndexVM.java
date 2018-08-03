@@ -2,7 +2,7 @@ package aefCMS.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -157,7 +157,7 @@ public class IndexVM {
 		tempGeneratedWebSite.deleteOnExit();
 		
 		//write initial html to file
-		FileUtils.writeStringToFile(tempGeneratedWebSite, iframeRenderer.render(model).toString(), "UTF-8"); 
+		saveWebSiteToFile(tempGeneratedWebSite, iframeRenderer.render(model));
 	}	
 	
 	@AfterCompose
@@ -235,16 +235,10 @@ public class IndexVM {
 	}
 	
 	//UTILITIES
-	
-//	//TODO CHANGE
-//	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
-//		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
-//		if (node.getChildren().size() > 0) {
-//			for (PageElement child : node.getChildren()) {
-//				createDraggableTreeElement(child, draggableTreeNode);
-//			}
-//		}
-//	}
+
+	private void saveWebSiteToFile(File destinationFile , StringBuffer sourceHtml) throws IOException {
+		FileUtils.writeStringToFile(destinationFile, sourceHtml.toString(), "UTF-8"); 
+	}
 	
 	private void forceIframeRefresh() {	
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
@@ -252,6 +246,16 @@ public class IndexVM {
 	}
 	
 }
+
+////TODO CHANGE
+//private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
+//	DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
+//	if (node.getChildren().size() > 0) {
+//		for (PageElement child : node.getChildren()) {
+//			createDraggableTreeElement(child, draggableTreeNode);
+//		}
+//	}
+//}
 	
 	
 /*****************************************************************************************/
