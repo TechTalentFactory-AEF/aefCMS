@@ -153,7 +153,7 @@ public class IndexVM {
 		ServletContext webAppcontext = WebApps.getCurrent().getServletContext();
 		File webAppTempDir = (File) webAppcontext.getAttribute("javax.servlet.context.tempdir");
 		tempGeneratedWebSite = File.createTempFile(OUT_FILE_NAME, ".html", webAppTempDir);
-		System.out.println("**DEBUG** tempGeneratedWebSite: " + tempGeneratedWebSite);
+		System.out.println("**DEBUG** (init) File tempGeneratedWebSite: " + tempGeneratedWebSite);
 		tempGeneratedWebSite.deleteOnExit();
 		
 		//generate initial html and save it to file
@@ -211,7 +211,8 @@ public class IndexVM {
 		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
 		
-		model.print();	//DEBUG
+		System.out.println("**DEBUG** (addElement) Model tree after add:");
+		model.print();	
 	}
 	
 	@Command
@@ -230,7 +231,8 @@ public class IndexVM {
 		//TODO the father should be the selected element after the removal
 		closePopup();
 		
-		model.print();	//DEBUG
+		System.out.println("**DEBUG** (removeElement) Model tree after remove:");
+		model.print();	
 	}
 	
 	@Command
@@ -243,13 +245,20 @@ public class IndexVM {
 		
 		closePopup();
 		
-		model.print();	//DEBUG
+		System.out.println("**DEBUG** (editElement) Model tree after edit:");
+		model.print();	
 	}
 	
-	public void moveElement() throws ResourceNotFoundException, ParseErrorException, Exception {	//gets called by DraggableTreeElemenrPlus.java
+	//gets called by DraggableTreeElemenrPlus.java
+	public void moveElement() throws ResourceNotFoundException, ParseErrorException, Exception {	
+		System.out.println("**DEBUG** (moveElement) ***An element has been moved***");
+		System.out.println("**DEBUG** (moveElement) The updated model tree:");
 		model.print();
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		System.out.println("**DEBUG** New Html after elemnts movement:\n" + outputWebSiteHtml);
+		System.out.println("**DEBUG** (moveElement) The updated html:");
+		System.out.println("+ + + + + + + + + + + + + + + + + + +");
+		System.out.println(outputWebSiteHtml);
+		System.out.println("+ + + + + + + + + + + + + + + + + + +");
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 		forceIframeRefresh();
 	}
@@ -262,7 +271,7 @@ public class IndexVM {
 	
 	private void forceIframeRefresh() {	
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
-		System.out.println("**DEBUG** Forced Iframe refresh.");
+		System.out.println("**DEBUG** (forceIframeRefresh) ***Done forced Iframe refresh***");
 	}
 	
 }	
