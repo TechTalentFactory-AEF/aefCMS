@@ -3,7 +3,7 @@
 	<head>
 		<title>$!{title}</title>
 	</head>
-	<body>
+	<body style="background-color: $!{debug}">	<!-- I color the background just to test if the iframe has been loaded -->
 		$!{children}
 	</body>
 </html>
