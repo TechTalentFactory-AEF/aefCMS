@@ -1,6 +1,7 @@
 package aefCMS.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,7 +17,7 @@ public class PageElement {
 	
 	public PageElement(LibraryElement type, Map<String, String> parameters) {
 		this.type = type;
-		this.parameters = parameters;
+		this.parameters = new HashMap<String, String>(parameters);	//WARING need a copy here, otherwise it'll modified when the hashmap is modified by another "add"
 		this.children = new ArrayList<PageElement>();
 	}
 	

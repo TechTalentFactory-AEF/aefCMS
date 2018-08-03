@@ -175,15 +175,19 @@ public class IndexVM {
 	@NotifyChange({"selectedPopupPath", "selectedLibraryElementZul"})
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopupType = popupType;
-		if (popupType.equals("modify"))
-			selectedLibraryElement = draggableSelectedElement.getPageElement().getType().getName();
+		if (popupType.equals("modify")) {
+			PageElement modelSelectedElement = draggableSelectedElement.getPageElement();
+			selectedLibraryElement = modelSelectedElement.getType().getName();
+			attributesHashMap.putAll(modelSelectedElement.getParameters());
+		}
 	}
 	
 	@Command
 	//calls NotifyChange procedurally, otherwise the notifications wouldn't happen when closePopup() is called not from the zul but from other methods
 	public void closePopup() {
 		selectedPopupType = null;
-		selectedLibraryElement = null;   //if we don't clean it, when you open again the add popup, the old type will be already selected
+		selectedLibraryElement = null;   //WARNING if we don't clean it, when you open again the add popup, the old type will be already selected
+		attributesHashMap.clear();		 //WARNING if we don't clean it, when you open again another popup, the old values will be selected
 		
 		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
 		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");	
