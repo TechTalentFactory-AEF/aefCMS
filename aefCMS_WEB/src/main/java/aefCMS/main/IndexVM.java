@@ -1,25 +1,34 @@
 package aefCMS.main;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.FileNotFoundException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
+
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.media.AMedia;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Iframe;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
@@ -31,17 +40,20 @@ public class IndexVM {
 	private final String CONTEXT_PATH 	   = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
 	private final String REL_LIBRARY_PATH  = "WEB-INF/cms_library";
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
-	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.  add -> /WEB-INF/popups/popup_add.zul
-	private final String OUT_WEBPAGE_PATH  = CONTEXT_PATH + "outputWebSite/index.html";		//WARNING if you change this one, you'll need to change it inside "index.zul" too
+	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.   add -> /WEB-INF/popups/popup_add.zul
+	private final String OUT_FILE_NAME	   = "index";							//ex. index -> index.html
 	
 	//ASSETS
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
 	private PageTree model;
-	private Writer outputWebSite;
+	private File tempGeneratedWebSite;
 	
 	//ZK ATTRIBUTES
+	
+	@Wire("#iframeInsideZul")
+	private Iframe iframeInsideZul;
 	
 	private DraggableTreeModel draggableTreeModel;
 	private DraggableTreeElementPlus draggableTreeRoot;
@@ -121,40 +133,40 @@ public class IndexVM {
 	}
 	
 	//INITIALIZATION
-
-	//TODO STUB
+	
 	@Init
 	@NotifyChange("draggableTreeModel")
-	public void init() throws IOException, Exception {
+	public void init() throws ResourceNotFoundException, ParseErrorException, Exception {
 		
 		lib = new Library(new File(ABS_LIBRARY_PATH));
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		//init pageTree model
+		//TODO STUB: init pageTree model
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 		stdPageAttributes.put("title", "My Web Page");
+		stdPageAttributes.put("debug", "lightBlue");	//DEBUG
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
 		model = new PageTree(stdPage);
 		
-//		outputWebSite = new FileWriter(new File(OUT_WEBPAGE_PATH));
-//		outputWebSite.write(iframeRenderer.render(model).toString());
-//		File f = new File(OUT_WEBPAGE_PATH);
-//		System.out.println(f);
-//		FileUtils.writeStringToFile(f, iframeRenderer.render(model).toString(), "UTF-8"); 
-//		forceIframeRefresh();
+		//create temporary file
+		ServletContext webAppcontext = WebApps.getCurrent().getServletContext();
+		File webAppTempDir = (File) webAppcontext.getAttribute("javax.servlet.context.tempdir");
+		tempGeneratedWebSite = File.createTempFile(OUT_FILE_NAME, ".html", webAppTempDir);
+		System.out.println("**DEBUG** tempGeneratedWebSite: " + tempGeneratedWebSite);
+		tempGeneratedWebSite.deleteOnExit();
 		
-	}
+		//write initial html to file
+		FileUtils.writeStringToFile(tempGeneratedWebSite, iframeRenderer.render(model).toString(), "UTF-8"); 
+	}	
 	
-//	File f;
-//	
-//	@AfterCompose
-//	public void after() throws ResourceNotFoundException, ParseErrorException, IOException, Exception {
-//		f = new File(OUT_WEBPAGE_PATH);
-//		System.out.println(f);
-//		FileUtils.writeStringToFile(f, iframeRenderer.render(model).toString(), "UTF-8"); 
-//		forceIframeRefresh();
-//	}
+	@AfterCompose
+    public void afterCompose(@ContextParam(ContextType.VIEW) Component view) throws FileNotFoundException {
+		Selectors.wireComponents(view, this, false);	//NOTE can't put this in a @init
+		
+		AMedia generatedWebSiteMedia = new AMedia(tempGeneratedWebSite, "text/html", null);
+		iframeInsideZul.setContent(generatedWebSiteMedia);	
+	}
 	
 	//POPUPS
 	
@@ -240,8 +252,6 @@ public class IndexVM {
 	}
 	
 }
-	
-	
 	
 	
 /*****************************************************************************************/

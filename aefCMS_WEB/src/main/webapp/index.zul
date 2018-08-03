@@ -30,7 +30,7 @@
 
 			<center>
 				<!-- GENERATED PAGE --> 
-				<iframe id="ifrInsideZk" src="outputWebSite/index.html" hflex="1" vflex="1"/>
+				<iframe id="iframeInsideZul" hflex="1" vflex="1"/>  
 			</center>
 			
 		</borderlayout>
