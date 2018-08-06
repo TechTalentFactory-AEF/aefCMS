@@ -17,7 +17,8 @@ public class PageElement {
 	
 	public PageElement(LibraryElement type, Map<String, String> parameters) {
 		this.type = type;
-		this.parameters = new HashMap<String, String>(parameters);	//WARING need a copy here, otherwise it'll modified when the hashmap is modified by another "add"
+		this.parameters = new HashMap<String, String>();	
+		this.parameters.putAll(parameters);		//WARNING we *copy* the values. If we simply do "this.parameters = parameters" then this.parameters will be modified when the argument hashmap is modified by another "add"
 		this.children = new ArrayList<PageElement>();
 	}
 	
@@ -52,7 +53,7 @@ public class PageElement {
 	}
 
 	public void setParameters(Map<String, String> parameters) {
-		this.parameters = parameters;
+		this.parameters.putAll(parameters);		//WARNING we *copy* the values. If we simply do "this.parameters = parameters" then this.parameters will be modified when the argument hashmap is modified by another time
 	}
 
 	public List<PageElement> getChildren() {

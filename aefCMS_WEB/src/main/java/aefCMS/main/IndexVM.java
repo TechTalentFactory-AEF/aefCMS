@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
@@ -144,6 +145,7 @@ public class IndexVM {
 		
 		//TODO modify this when loading from json
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+		stdPageAttributes.put("id", UUID.randomUUID().toString());
 		stdPageAttributes.put("title", "My Web Page");
 		stdPageAttributes.put("debug", "lightBlue");	//DEBUG
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
@@ -198,7 +200,8 @@ public class IndexVM {
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void addElement() throws ResourceNotFoundException, ParseErrorException, Exception {
-		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);
+		attributesHashMap.put("id", UUID.randomUUID().toString());
+		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);	//NOTE attributesHashMap values are *copied* inside the new element map
 		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
 		
 		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement, this);	//NOTE: the element is also added to the draggableTree
@@ -237,7 +240,7 @@ public class IndexVM {
 	
 	@Command
 	public void editElement() throws ResourceNotFoundException, ParseErrorException, Exception {
-		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);
+		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);		//NOTE attributesHashMap values are *copied* inside the new element map
 		
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);

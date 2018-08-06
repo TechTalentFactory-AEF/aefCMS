@@ -5,21 +5,27 @@
     	contentStyle="overflow:auto;"
  		style="padding: 0;">
 	
-	<!-- TITLE -->
-	<hbox>
-		<label value="Element type: "/>
-		<label value="@load(IndexVm.selectedLibraryElement)"/>
-		<space/>
-		<button label="Close Popup" onClick="@command('closePopup')"/>
-	</hbox>
-	<space/>
+	<!-- CLOSE BUTTON -->
+	<button label="Close Popup" onClick="@command('closePopup')"/>
+	<separator spacing="20px"/>
+	
+	<!-- ELEMENT INFOS -->
+	<vbox>
+		<hbox>
+			<label value="Element Type: "/>
+			<label value="@load(IndexVm.draggableSelectedElement.pageElement.type.name)"/>
+		</hbox>
+		<hbox>
+			<label value="Element ID: "/>
+			<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters.id)"/>
+		</hbox>
+	</vbox>
+	<separator spacing="20px"/>
 	
 	<!-- FORM -->
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
-	<space/>
+	<separator spacing="20px"/>
 	
 	<!-- FINAL COMMAND BUTTON -->
-	<hbox visible="@load(not empty IndexVm.selectedLibraryElement)">
-		<button label="UPDATE" onClick="@command('editElement')"/>
-	</hbox>	
+	<button visible="@load(not empty IndexVm.selectedLibraryElement)" label="UPDATE" onClick="@command('editElement')"/>
 </window>

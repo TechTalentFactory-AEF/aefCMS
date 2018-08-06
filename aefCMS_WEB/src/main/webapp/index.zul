@@ -17,7 +17,7 @@
 					<!-- TREE --> 
 					<hbox id="editableTree">
 						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
-						<space/>
+						<separator/>
 						<button iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
 						<button iconSclass="z-icon-minus" disabled="@load(empty IndexVm.draggableSelectedElement or (IndexVm.draggableSelectedElement eq IndexVm.draggableTreeRoot))" onClick="@command('openPopup', popupType='remove')"/>
 						<button iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>

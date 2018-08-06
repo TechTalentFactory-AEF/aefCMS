@@ -4,24 +4,23 @@
     	height="70%"
     	contentStyle="overflow:auto;"
  		style="padding: 0;">
+ 		
+ 	<!-- CLOSE BUTTON -->
+	<button label="Close Popup" onClick="@command('closePopup')"/>
+	<separator spacing="20px"/>
 	
 	<!-- SELECT MENU -->
-	<hbox>
-		<listbox model="@load(IndexVm.libraryElementList)" 
-				 selectedItem="@bind(IndexVm.selectedLibraryElement)"
-			  	 width="100%"
-			  	 rows="1"
-			  	 mold="select"/>
-		<button label="Close Popup" onClick="@command('closePopup')"/>
-	</hbox>
-	<space/>
+	<listbox model="@load(IndexVm.libraryElementList)" 
+			 selectedItem="@bind(IndexVm.selectedLibraryElement)"
+			 width="100%"
+			 rows="1"
+			 mold="select"/>
+	<separator spacing="20px"/>
 	
 	<!-- VARIABLE FORM -->
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
-	<space/>
+	<separator spacing="20px"/>
 
 	<!-- FINAL COMMAND BUTTON -->
-	<hbox visible="@load(not empty IndexVm.selectedLibraryElement)">
-		<button label="ADD" onClick="@command('addElement')"/>
-	</hbox>
+	<button visible="@load(not empty IndexVm.selectedLibraryElement)" label="ADD" onClick="@command('addElement')"/>
 </window>

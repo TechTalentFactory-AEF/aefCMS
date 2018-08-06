@@ -4,11 +4,10 @@
     	height="30%"
  		style="padding: 0;">
 	
-	<vbox>
-		<label value="Are you sure to remove the element?"/>
-		<hbox>
-			<button label="No" onClick="@command('closePopup')"/>
-			<button label="Yes" onClick="@command('removeElement')"/>
-		</hbox>
-	</vbox>
+	<label value="Are you sure to remove the element?"/>
+	<separator spacing="20px"/>
+	<hbox>
+		<button label="No" onClick="@command('closePopup')"/>
+		<button label="Yes" onClick="@command('removeElement')"/>
+	</hbox>
 </window>
