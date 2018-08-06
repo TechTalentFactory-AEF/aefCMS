@@ -61,21 +61,12 @@ public class IndexVM {
 	private DraggableTreeElementPlus draggableSelectedElement;
 	
 	private String selectedPopupType;
-	private List<String> libraryElementList;
-	private String selectedLibraryElement;
-	private Map<String, String> attributesHashMap = new HashMap<String, String>();
+	private List<LibraryElement> libraryElementList = new ArrayList<LibraryElement>();
+	private LibraryElement selectedLibraryElement;
+	
+	private Map<String, String> selectedElementParameters= new HashMap<String, String>();
 	
 	//GETTERS SETTERS
-	
-	public List<String> getLibraryElementList() {		
-		if (libraryElementList == null) {
-			libraryElementList = new ArrayList<String>();
-			for(LibraryElement libEl : lib.getElements())
-				libraryElementList.add(libEl.getName());
-			libraryElementList.sort(null);	
-		}
-		return libraryElementList;
-	}
 	
 	//TODO modify this when loading from json
 	public DraggableTreeModel getDraggableTreeModel() {	
@@ -108,30 +99,47 @@ public class IndexVM {
 		return path;
 	}
 	
-	public String getSelectedLibraryElement() {
+	public List<LibraryElement> getLibraryElementList() {		
+		if (libraryElementList.isEmpty()) {
+			for(LibraryElement libEl : lib.getElements())
+				libraryElementList.add(libEl);
+		}
+		return libraryElementList;
+	}
+	
+	public LibraryElement getSelectedLibraryElement() {
 		return selectedLibraryElement;
 	}
 	
-	@NotifyChange({"selectedLibraryElement","selectedLibraryElementZul","attributesHashMap"})
-	public void setSelectedLibraryElement(String selectedLibraryElement) {
+	@NotifyChange("selectedLibraryElementZul")
+	public void setSelectedLibraryElement(LibraryElement selectedLibraryElement) {
 		this.selectedLibraryElement = selectedLibraryElement;
-		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
 	}
+	
+//	public String getSelectedLibraryElement() {
+//		return selectedLibraryElement;
+//	}
+
+//	@NotifyChange({"selectedLibraryElement","selectedLibraryElementZul","attributesHashMap"})
+//	public void setSelectedLibraryElement(String selectedLibraryElement) {
+//		this.selectedLibraryElement = selectedLibraryElement;
+//		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
+//	}
 	
 	public String getSelectedLibraryElementZul() {
-		String path = null;
-		if (selectedLibraryElement != null)
-			path = REL_LIBRARY_PATH + "/" + selectedLibraryElement + "/" + "mask.zul";
-		return path;
+	String path = null;
+	if (selectedLibraryElement != null)
+		path = REL_LIBRARY_PATH + "/" + selectedLibraryElement.getName() + "/" + "mask.zul";
+	return path;
 	}
 	
-	public Map<String, String> getAttributesHashMap() {
-		return attributesHashMap;
-	}
-
-	public void setAttributesHashMap(Map<String, String> attributesHashMap) {
-		this.attributesHashMap = attributesHashMap;
-	}
+//	public Map<String, String> getAttributesHashMap() {
+//		return attributesHashMap;
+//	}
+//
+//	public void setAttributesHashMap(Map<String, String> attributesHashMap) {
+//		this.attributesHashMap = attributesHashMap;
+//	}
 	
 	//INITIALIZATION
 	
@@ -177,11 +185,12 @@ public class IndexVM {
 	@NotifyChange({"selectedPopupPath", "selectedLibraryElementZul"})
 	public void openPopup(@BindingParam("popupType") String popupType) {
 		selectedPopupType = popupType;
-		if (popupType.equals("modify")) {
-			PageElement modelSelectedElement = draggableSelectedElement.getPageElement();
-			selectedLibraryElement = modelSelectedElement.getType().getName();
-			attributesHashMap.putAll(modelSelectedElement.getParameters());
-		}
+		if (popupType.equals("open"))
+//		if (popupType.equals("modify")) {
+//			PageElement modelSelectedElement = draggableSelectedElement.getPageElement();
+//			selectedLibraryElement = modelSelectedElement.getType().getName();
+//			attributesHashMap.putAll(modelSelectedElement.getParameters());
+//		}
 	}
 	
 	@Command
@@ -189,7 +198,7 @@ public class IndexVM {
 	public void closePopup() {
 		selectedPopupType = null;
 		selectedLibraryElement = null;   //WARNING if we don't clean it, when you open again the add popup, the old type will be already selected
-		attributesHashMap.clear();		 //WARNING if we don't clean it, when you open again another popup, the old values will be selected
+//		attributesHashMap.clear();		 //WARNING if we don't clean it, when you open again another popup, the old values will be selected
 		
 		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
 		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");	
@@ -200,7 +209,7 @@ public class IndexVM {
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void addElement() throws ResourceNotFoundException, ParseErrorException, Exception {
-		attributesHashMap.put("id", UUID.randomUUID().toString());
+		selecte.ge.put("id", UUID.randomUUID().toString());
 		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);	//NOTE attributesHashMap values are *copied* inside the new element map
 		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
 		
@@ -218,53 +227,53 @@ public class IndexVM {
 		model.print();	
 	}
 	
-	@Command
-	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
-	public void removeElement() throws ResourceNotFoundException, ParseErrorException, Exception {
-		model.removeElement(draggableSelectedElement.getPageElement());
-		
-		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
-		draggableTreeRoot.recomputeSpacersRecursive();
-		
-		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
-		forceIframeRefresh();
-		
-		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
-		//TODO the father should be the selected element after the removal
-		closePopup();
-		
-		System.out.println("**DEBUG** (removeElement) Model tree after remove:");
-		model.print();	
-	}
-	
-	@Command
-	public void editElement() throws ResourceNotFoundException, ParseErrorException, Exception {
-		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);		//NOTE attributesHashMap values are *copied* inside the new element map
-		
-		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
-		forceIframeRefresh();
-		
-		closePopup();
-		
-		System.out.println("**DEBUG** (editElement) Model tree after edit:");
-		model.print();	
-	}
-	
-	//gets called by DraggableTreeElemenrPlus.java
-	public void moveElement() throws ResourceNotFoundException, ParseErrorException, Exception {	
-		System.out.println("**DEBUG** (moveElement) ***An element has been moved***");
-		System.out.println("**DEBUG** (moveElement) The updated model tree:");
-		model.print();
-		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		System.out.println("**DEBUG** (moveElement) The updated html:");
-		System.out.println("+ + + + + + + + + + + + + + + + + + +");
-		System.out.println(outputWebSiteHtml);
-		System.out.println("+ + + + + + + + + + + + + + + + + + +");
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
-		forceIframeRefresh();
-	}
+//	@Command
+//	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
+//	public void removeElement() throws ResourceNotFoundException, ParseErrorException, Exception {
+//		model.removeElement(draggableSelectedElement.getPageElement());
+//		
+//		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
+//		draggableTreeRoot.recomputeSpacersRecursive();
+//		
+//		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+//		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+//		forceIframeRefresh();
+//		
+//		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
+//		//TODO the father should be the selected element after the removal
+//		closePopup();
+//		
+//		System.out.println("**DEBUG** (removeElement) Model tree after remove:");
+//		model.print();	
+//	}
+//	
+//	@Command
+//	public void editElement() throws ResourceNotFoundException, ParseErrorException, Exception {
+//		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);		//NOTE attributesHashMap values are *copied* inside the new element map
+//		
+//		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+//		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+//		forceIframeRefresh();
+//		
+//		closePopup();
+//		
+//		System.out.println("**DEBUG** (editElement) Model tree after edit:");
+//		model.print();	
+//	}
+//	
+//	//gets called by DraggableTreeElemenrPlus.java
+//	public void moveElement() throws ResourceNotFoundException, ParseErrorException, Exception {	
+//		System.out.println("**DEBUG** (moveElement) ***An element has been moved***");
+//		System.out.println("**DEBUG** (moveElement) The updated model tree:");
+//		model.print();
+//		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+//		System.out.println("**DEBUG** (moveElement) The updated html:");
+//		System.out.println("+ + + + + + + + + + + + + + + + + + +");
+//		System.out.println(outputWebSiteHtml);
+//		System.out.println("+ + + + + + + + + + + + + + + + + + +");
+//		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+//		forceIframeRefresh();
+//	}
 	
 	//UTILITIES
 

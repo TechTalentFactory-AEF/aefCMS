@@ -14,11 +14,19 @@
 			 selectedItem="@bind(IndexVm.selectedLibraryElement)"
 			 width="100%"
 			 rows="1"
-			 mold="select"/>
+			 mold="select">
+		<template name="libElement">
+       		<listitem>
+            	<listcell label="@load(each.name)"/>
+        	</listitem>
+        </template>
+	</listbox>
 	<separator spacing="20px"/>
 	
 	<!-- VARIABLE FORM -->
-	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
+	
+	<include src="@load(IndexVm.selectedLibraryElementZul)"
+			 form="@id('middleObject') @save(IndexVm.lastAdded, before='addElement')"/>
 	<separator spacing="20px"/>
 
 	<!-- FINAL COMMAND BUTTON -->

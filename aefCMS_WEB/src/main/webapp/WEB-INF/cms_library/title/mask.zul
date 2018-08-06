@@ -1,15 +1,15 @@
-<hlayout>
+<hlayout">
 	<vbox>
 		<hbox>
 			<label value="Color: "></label>
-			<radiogroup selectedItem="@bind(IndexVm.attributesHashMap['text-color'])">
+			<radiogroup selectedItem="@bind(tmp['text-color'])">
 				<radio label="Red" value="red"/>
 				<radio label="Green" value="green"/>
 			</radiogroup>
 		</hbox>
 		<hbox>
 			<label value="Text: "/>
-			<textbox value="@bind(IndexVm.attributesHashMap['text'])"/>
+			<textbox value="@bind(tmp['text'])"/>
 		</hbox>
 	</vbox>
 </hlayout>
