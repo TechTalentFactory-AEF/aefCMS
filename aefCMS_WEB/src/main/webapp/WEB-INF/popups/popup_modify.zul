@@ -1,31 +1,34 @@
-<window title="Modify Element"
-    	mode="modal" 
-	    width="60%"
-    	height="70%"
-    	contentStyle="overflow:auto;"
+<window mode="modal" 
+		width="50%"
+    	contentStyle="overflow:auto"
  		style="padding: 0;">
 	
-	<!-- CLOSE BUTTON -->
-	<button label="Close Popup" onClick="@command('closePopup')"/>
-	<separator spacing="20px"/>
-	
 	<!-- ELEMENT INFOS -->
-	<vbox>
-		<hbox>
-			<label value="Element Type: "/>
-			<label value="@load(IndexVm.draggableSelectedElement.pageElement.type.name)"/>
+	<div align="center">	
+		<vbox align="center">
+			<hbox>
+				<label value="Selected element Type: "/>
+				<label value="@load(IndexVm.draggableSelectedElement.pageElement.type.name)"/>
+			</hbox>
+			<hbox>
+				<label value="Selected element ID: "/>
+				<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters['id'])"/>
 		</hbox>
-		<hbox>
-			<label value="Element ID: "/>
-			<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters['id'])"/>
-		</hbox>
-	</vbox>
+		</vbox>
+	</div>	
 	<separator spacing="20px"/>
 	
 	<!-- FORM -->
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
 	<separator spacing="20px"/>
-	
-	<!-- FINAL COMMAND BUTTON -->
-	<button visible="@load(not empty IndexVm.selectedLibraryElement)" label="UPDATE" onClick="@command('editElement')"/>
+		
+	<div align="center">
+		<hbox>
+			<!-- CLOSE BUTTON -->
+			<button label="Close Popup" onClick="@command('closePopup')"/>
+			<separator />
+			<!-- FINAL COMMAND BUTTON -->
+			<button visible="@load(not empty IndexVm.selectedLibraryElement)" label="UPDATE" onClick="@command('editElement')"/>
+		</hbox>
+	</div>		
 </window>
