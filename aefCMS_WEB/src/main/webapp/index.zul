@@ -1,3 +1,5 @@
+<?page title="aefCMS"?>
+
 <zk>
 	<window apply="org.zkoss.bind.BindComposer"
 			viewModel="@id('IndexVm') @init('aefCMS.main.IndexVM')"
@@ -6,31 +8,41 @@
 			style="padding: 0;">
 	
 		<borderlayout>
-		
-			<north border="0">
-				<!-- TITLE --> 
-				<label value="Welcome to this simple Html Page Generator"/>
-			</north>
-			
-			<west size="25%">
-				<div>
+			<west size="20%" border="0" vflex="1" splittable="true" collapsible="true">
+				<vlayout id="editableTree" vflex="1">
+					<div sclass="button-bar" >
+						<hlayout>
+							<button height="40px" iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
+							<button height="40px" iconSclass="z-icon-minus" disabled="@load(empty IndexVm.draggableSelectedElement or (IndexVm.draggableSelectedElement eq IndexVm.draggableTreeRoot))" onClick="@command('openPopup', popupType='remove')"/>
+							<button height="40px" iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>
+						</hlayout>
+					</div>
+					
 					<!-- TREE --> 
-					<hbox id="editableTree">
-						<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
-						<separator/>
-						<button iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
-						<button iconSclass="z-icon-minus" disabled="@load(empty IndexVm.draggableSelectedElement or (IndexVm.draggableSelectedElement eq IndexVm.draggableTreeRoot))" onClick="@command('openPopup', popupType='remove')"/>
-						<button iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>
-					</hbox>
-	
+					<draggableTree model="@load(IndexVm.draggableTreeModel)" selectedElement="@save(IndexVm.draggableSelectedElement)" vflex="1" style="overflow:auto;"/>	 <!-- TODO: if set @bind it generates an infinite loop  -->
+				
 					<!-- POPUP --> 
 					<include src="@load(IndexVm.selectedPopupPath)"/>
-				</div>
+				</vlayout>
 			</west>
 
-			<center>
-				<!-- GENERATED PAGE --> 
-				<iframe id="iframeInsideZul" hflex="1" vflex="1"/>  
+			<center vflex="1" border="0">
+				<vlayout vflex="1">
+					<!-- UPPER MENUS -->
+					<hbox width="100%" pack="end" >
+					 	<button label="Export Html" onClick="@command('exportHtml')" height="40px" width="min"/>
+						<separator hflex="1"/>						
+						<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', iframeWidth='576px')"/>
+						<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', iframeWidth='768px')"/>
+						<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',iframeWidth='992px')"/>	
+						<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', iframeWidth='1200px')"/>
+						<button height="40px" label="Full Size" onClick="@command('resizeIFrame', iframeWidth='100%')"/>	
+					</hbox>
+					<!-- GENERATED PAGE --> 
+					<div align="center" hflex="1" vflex="1" style="overflow-x:auto; overflow-y:hidden;">
+						<iframe id="iframeInsideZul" style="overflow-y:auto; border: 5px solid #d8d8d8; " width="@load(IndexVm.iframeWidth)" vflex="1" />
+					</div>
+				</vlayout>
 			</center>
 			
 		</borderlayout>

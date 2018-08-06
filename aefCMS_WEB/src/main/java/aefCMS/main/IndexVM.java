@@ -55,6 +55,7 @@ public class IndexVM {
 	
 	@Wire("#iframeInsideZul")
 	private Iframe iframeInsideZul;
+	private String iframeWidth;
 	
 	private DraggableTreeModel draggableTreeModel;
 	private DraggableTreeElementPlus draggableTreeRoot;
@@ -75,6 +76,14 @@ public class IndexVM {
 			libraryElementList.sort(null);	
 		}
 		return libraryElementList;
+	}
+	
+	public String getIframeWidth() {
+		return iframeWidth;
+	}
+
+	public void setIframeWidth(String iframeWidth) {
+		this.iframeWidth = iframeWidth;
 	}
 	
 	//TODO modify this when loading from json
@@ -147,7 +156,7 @@ public class IndexVM {
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 		stdPageAttributes.put("id", UUID.randomUUID().toString());
 		stdPageAttributes.put("title", "My Web Page");
-		stdPageAttributes.put("debug", "lightBlue");	//DEBUG
+		stdPageAttributes.put("debug", "#f2f2f2");	//DEBUG  (#f2f2f2 = light gray)
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
 		model = new PageTree(stdPage);
 		
@@ -164,11 +173,14 @@ public class IndexVM {
 	}	
 	
 	@AfterCompose
+	@NotifyChange("iframeWidth")
     public void afterCompose(@ContextParam(ContextType.VIEW) Component view) throws FileNotFoundException {
 		Selectors.wireComponents(view, this, false);	//NOTE can't put this in a @init
 		
 		AMedia generatedWebSiteMedia = new AMedia(tempGeneratedWebSite, "text/html", null);
 		iframeInsideZul.setContent(generatedWebSiteMedia);	
+		
+		iframeWidth = "100%";
 	}
 	
 	//POPUPS
@@ -193,6 +205,14 @@ public class IndexVM {
 		
 		BindUtils.postNotifyChange(null, null, this, "selectedPopupPath");
 		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");	
+	}
+	
+	//IFRAME RESPONSIVITY
+	
+	@Command
+	@NotifyChange("iframeWidth")
+	public void resizeIFrame (@BindingParam("iframeWidth") String iframeWidth) {
+		this.iframeWidth = iframeWidth;
 	}
 	
 	//TREES OPERATIONS
@@ -265,6 +285,14 @@ public class IndexVM {
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 		forceIframeRefresh();
 	}
+
+//TODO
+//	// EXPORT HTML
+//	@Command
+//	public void exportHtml () throws FileNotFoundException {
+//		File fileToSave = new File(OUT_WEBPAGE_PATH);
+//		Filedownload.save(fileToSave, "text/html");
+//	}
 	
 	//UTILITIES
 
