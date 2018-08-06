@@ -14,12 +14,13 @@
 		        </row>
 		        <row if="${ each.equals('card-image-path')}">
 		 				<vbox>
-		 					Background Image
-							<button label="Upload" upload="true,maxsize=10000" onUpload="@command('processMedia', media=event.media, shownImage=pics)"/>				
+		 					Background Image				
 						</vbox>
-					<div style="text-align:center;">
-	 					<label value="Loaded Image will be shown below"/> 
-	 				</div> 
+					<vlayout style="text-align:center;">
+	 					<label value="Loaded Image will be shown below"/>
+	 					<button label="Upload" upload="true,maxsize=10000" onUpload="@command('processMedia', media=event.media, shownImage=pics)"/> 
+	 				</vlayout>
+	 	
 		        </row>
     		</template> 
 		</grid>
