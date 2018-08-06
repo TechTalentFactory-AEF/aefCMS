@@ -21,7 +21,7 @@ public class PageTreeSerializer {
 	
 	// SAVE PAGETREE	
 	public static void saveTreeToDisc(String savePageTreePath, PageTree currentTree) throws IOException {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new Gson();
 		Writer treeWriterUpdate = new FileWriter(savePageTreePath);
 
 		gson.toJson(currentTree.getRoot(), treeWriterUpdate);

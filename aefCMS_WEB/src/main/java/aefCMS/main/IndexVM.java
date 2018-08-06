@@ -208,13 +208,14 @@ public class IndexVM {
 	
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
-	public void addElement() {
+	public void addElement() throws IOException {
 		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);
 		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
 		
 		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
-		
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+		logger.log( Level.INFO, "Saved PageTree Model");
 		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
 		
@@ -223,12 +224,13 @@ public class IndexVM {
 	
 	@Command
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
-	public void removeElement() {
+	public void removeElement() throws IOException {
 		model.removeElement(draggableSelectedElement.getPageElement());
 		
 		DraggableTreeComponent.removeFromParent(draggableSelectedElement);
 		draggableTreeRoot.recomputeSpacersRecursive();
-		
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+		logger.log( Level.INFO, "Saved PageTree Model");
 		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
 		//TODO the father should be the selected element after the removal
 		closePopup();
@@ -237,9 +239,10 @@ public class IndexVM {
 	}
 	
 	@Command
-	public void editElement() {
+	public void editElement() throws IOException {
 		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);
-		
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+		logger.log( Level.INFO, "Saved PageTree Model");
 		closePopup();
 		
 		model.print();	//DEBUG
