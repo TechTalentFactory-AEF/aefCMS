@@ -14,11 +14,40 @@
 			 selectedItem="@bind(IndexVm.selectedLibraryElement)"
 			 width="100%"
 			 rows="1"
-			 mold="select"/>
+			 mold="select">
+		<template name="libElement">
+       		<listitem>
+            	<listcell label="@load(each.name)"/>
+        	</listitem>
+        </template>
+	</listbox>
 	<separator spacing="20px"/>
 	
 	<!-- VARIABLE FORM -->
+	<grid model="@load(IndexVm.selectedLibraryElement.attributes)">
+		<colums>
+			<column hflex="min"/>
+			<column />
+		</colums>
+		<template name="elementAttribute">
+	        <row>
+	            <label value="@load(each)"
+	            <textbox value="@bind(IndexVm.attributesHashMap)"
+	        </row>
+   		</template>
+		<rows>
+			<row>
+				<template name="elementAttribute">
+		       		<listitem>
+		            	<listcell label="@load(each.name)"/>
+		        	</listitem>
+		        </template>
+	        </row>
+        </rows>
+	</listbox>
+	<!-- 
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
+	 -->
 	<separator spacing="20px"/>
 
 	<!-- FINAL COMMAND BUTTON -->

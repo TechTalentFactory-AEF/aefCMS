@@ -61,21 +61,21 @@ public class IndexVM {
 	private DraggableTreeElementPlus draggableSelectedElement;
 	
 	private String selectedPopupType;
-	private List<String> libraryElementList;
-	private String selectedLibraryElement;
+	private List<LibraryElement> libraryElementList;
+	private LibraryElement selectedLibraryElement;
 	private Map<String, String> attributesHashMap = new HashMap<String, String>();
 	
 	//GETTERS SETTERS
 	
-	public List<String> getLibraryElementList() {		
+	public List<LibraryElement> getLibraryElementList() {		
 		if (libraryElementList == null) {
-			libraryElementList = new ArrayList<String>();
+			libraryElementList = new ArrayList<LibraryElement>();
 			for(LibraryElement libEl : lib.getElements())
-				libraryElementList.add(libEl.getName());
+				libraryElementList.add(libEl);
 			libraryElementList.sort(null);	
 		}
 		return libraryElementList;
-	}
+	}	
 	
 	//TODO modify this when loading from json
 	public DraggableTreeModel getDraggableTreeModel() {	
@@ -108,7 +108,11 @@ public class IndexVM {
 		return path;
 	}
 	
-	public String getSelectedLibraryElement() {
+	public void setSelectedLibraryElement(LibraryElement selectedLibraryElement) {
+		this.selectedLibraryElement = selectedLibraryElement;
+	}
+	
+	public LibraryElement getSelectedLibraryElement() {
 		return selectedLibraryElement;
 	}
 	
@@ -117,13 +121,14 @@ public class IndexVM {
 		this.selectedLibraryElement = selectedLibraryElement;
 		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
 	}
-	
-	public String getSelectedLibraryElementZul() {
-		String path = null;
-		if (selectedLibraryElement != null)
-			path = REL_LIBRARY_PATH + "/" + selectedLibraryElement + "/" + "mask.zul";
-		return path;
-	}
+
+
+//	public String getSelectedLibraryElementZul() {
+//		String path = null;
+//		if (selectedLibraryElement != null)
+//			path = REL_LIBRARY_PATH + "/" + selectedLibraryElement + "/" + "mask.zul";
+//		return path;
+//	}
 	
 	public Map<String, String> getAttributesHashMap() {
 		return attributesHashMap;
