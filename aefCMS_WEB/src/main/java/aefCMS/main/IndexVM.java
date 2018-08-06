@@ -29,6 +29,7 @@ import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Iframe;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
@@ -286,13 +287,12 @@ public class IndexVM {
 		forceIframeRefresh();
 	}
 
-//TODO
-//	// EXPORT HTML
-//	@Command
-//	public void exportHtml () throws FileNotFoundException {
-//		File fileToSave = new File(OUT_WEBPAGE_PATH);
-//		Filedownload.save(fileToSave, "text/html");
-//	}
+	//EXPORT HTML
+	
+	@Command
+	public void exportHtml() throws FileNotFoundException {
+		Filedownload.save(tempGeneratedWebSite, "text/html");
+	}
 	
 	//UTILITIES
 
