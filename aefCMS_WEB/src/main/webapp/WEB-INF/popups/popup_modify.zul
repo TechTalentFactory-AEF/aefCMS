@@ -17,7 +17,7 @@
 		</hbox>
 		<hbox>
 			<label value="Element ID: "/>
-			<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters.id)"/>
+			<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters['id'])"/>
 		</hbox>
 	</vbox>
 	<separator spacing="20px"/>
