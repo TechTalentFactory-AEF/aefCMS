@@ -45,7 +45,6 @@ public class IndexVM {
 	private final String SAVE_IMAGE_PATH   = CONTEXT_PATH + "savedImages/";
 	//TOOLS
 	
-	private Library lib;
 	private HtmlRenderer iframeRenderer;
 	private String iframeWidth;
 	
@@ -65,6 +64,11 @@ public class IndexVM {
 	Map<String, String> attributesHashMap = new HashMap<String, String>();
 	
 	//GETTERS SETTERS
+	
+	private Library lib;
+	public Library getLib() {
+		return lib;
+	}
 	
 	public List<String> getLibraryElementList() {		
 		if (libraryElementList == null) {

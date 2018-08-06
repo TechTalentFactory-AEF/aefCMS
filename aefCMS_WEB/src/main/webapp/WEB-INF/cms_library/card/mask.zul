@@ -1,0 +1,42 @@
+	<vlayout>
+		<space></space>		
+		<grid model="@load(IndexVm.lib.getElement(IndexVm.selectedLibraryElement).attributes)">
+			<columns>
+        		<column hflex="min" label="Attribute" />
+        		<column label="Value" />
+    		</columns>
+
+			<template name="model">
+			    
+		        <row if="${not each.equals('card-image-path')}">
+		            <label value="${each}" />   	
+					<textbox value="@bind(IndexVm.attributesHashMap[each])"  hflex="1"> </textbox>
+		        </row>
+		        <row if="${ each.equals('card-image-path')}">
+		 				<vbox>
+		 					Background Image
+							<button label="Upload" upload="true,maxsize=10000" onUpload="@command('processMedia', media=event.media, shownImage=pics)"/>				
+						</vbox>
+					<div style="text-align:center;">
+	 					<label value="Loaded Image will be shown below"/> 
+	 				</div> 
+		        </row>
+    		</template> 
+		</grid>
+		<div style="text-align:center;">
+			<image id="pics"></image>
+		</div> 
+	</vlayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
