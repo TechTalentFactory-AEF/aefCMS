@@ -1,0 +1,69 @@
+	<vlayout>		
+		<hlayout>
+			<space></space>
+				<vbox>
+					<grid width="98%">
+			    		<columns>
+			    			<column hflex="min"/>
+			    			<column/>
+			    		</columns>
+			    		<rows>
+			    			<row>
+			    				<div style="valign:middle;">
+			    					<vbox pack="middle" align="middle">
+										Background Image
+										<button label="Upload" upload="true,maxsize=10000" onUpload="@command('processMedia', media=event.media, shownImage=pics)"/>
+									</vbox>
+								</div>
+								<image id="pics"/>	
+			    			</row>
+			    			<row>
+	    						Image Height (px or %)
+	    						<textbox value="@bind(IndexVm.attributesHashMap['container-height'])" hflex="1"/>
+	    					</row>
+			    			<row>
+			    				Jumbo Title
+			    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-title'])" hflex="1"/>
+			    			</row>
+			    			<row>
+			    				Jumbo Paragraph
+			    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-text'])" hflex="1"/>
+			    			</row>
+			    			
+			    		</rows>
+			    	</grid>
+			    	<space></space>
+			    	<grid width="98%">
+			    		<columns>
+			    			<column hflex="min"/>
+			    			<column label="Name" style="text-align:center;"/>
+			    			<column label="Link" style="text-align:center;"/>
+			    		</columns>
+			    		<rows>
+			    			<row>
+			    				Button Options
+			    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-button-text'])" hflex="1"/>
+			    				<textbox value="@bind(IndexVm.attributesHashMap['jumbo-button-link'])" hflex="1"/>
+			    			</row>
+			  			
+			    		</rows>
+			    	</grid>
+			</vbox>	
+			
+		</hlayout>
+	</vlayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

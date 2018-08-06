@@ -2,6 +2,7 @@ package aefCMS.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,12 +25,16 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WebApps;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Iframe;
+import org.zkoss.zul.Image;
+import org.zkoss.zul.Messagebox;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
@@ -43,8 +48,10 @@ public class IndexVM {
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.   add -> /WEB-INF/popups/popup_add.zul
 	private final String OUT_FILE_NAME	   = "index";							//ex. index -> index.html
+	private final String OUT_WEBPAGE_PATH  = CONTEXT_PATH + "outputWebSite/index.html";   //WARNING if you change this one, you'll need to change it inside "index.zul" too
+	private final String SAVE_IMAGE_PATH   = CONTEXT_PATH + "savedImages/";
 	
-	//ASSETS
+	//TOOLS
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
@@ -266,6 +273,41 @@ public class IndexVM {
 		forceIframeRefresh();
 	}
 	
+	// EXPORT HTML
+	@Command
+	public void exportHtml () throws FileNotFoundException {
+		File fileToSave = new File(OUT_WEBPAGE_PATH);
+		Filedownload.save(fileToSave, "text/html");
+	}
+	
+	   
+	@SuppressWarnings("deprecation")
+	@Command  
+	@NotifyChange("*")
+    public void processMedia(@BindingParam ("media") Media media, @BindingParam ("shownImage") Image pics ) throws IOException {
+
+		if (media instanceof org.zkoss.image.Image) {
+			org.zkoss.image.Image img = (org.zkoss.image.Image) media;
+			
+			if (img.getWidth() > img.getHeight()){
+				if (img.getHeight() > 300) {
+					pics.setHeight("300px");
+					pics.setWidth(img.getWidth() * 300 / img.getHeight() + "px");
+				}
+			}
+			String saveLocation = SAVE_IMAGE_PATH+ media.getName();
+			File outputFile = new File(saveLocation);
+			FileOutputStream fos = new FileOutputStream(outputFile);
+			fos.write(media.getByteData());
+			fos.close();
+			attributesHashMap.put("background-image-path",saveLocation);
+			pics.setContent(img);
+			
+		} else {
+			Messagebox.show("Not an image: "+media, "Error", Messagebox.OK, Messagebox.ERROR);
+		}
+    }
+	
 	//UTILITIES
 
 	private void saveWebSiteToFile(File destinationFile , StringBuffer sourceHtml) throws IOException {
@@ -276,6 +318,6 @@ public class IndexVM {
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
 		System.out.println("**DEBUG** (forceIframeRefresh) ***Done forced Iframe refresh***");
 	}
-	
+
 }	
 	
