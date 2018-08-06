@@ -1,0 +1,19 @@
+<hlayout>
+	<space></space>
+		<vbox>
+			<grid width="98%">
+	    		<columns>
+	    			<column label="Option" hflex="min"/>
+	  				<column label="Link Name"></column>
+	  				<column label="Address"></column>
+	  			</columns>
+	    		<rows>
+	    			<row>
+	    			 	Navbar Link
+ 						<textbox value="@bind(IndexVm.attributesHashMap['link-name'])" hflex="1"/>
+ 						<textbox value="@bind(IndexVm.attributesHashMap['navbar-link'])" hflex="1"/>
+	    			</row>
+	    		</rows>
+	    	</grid>
+	</vbox>	
+</hlayout>

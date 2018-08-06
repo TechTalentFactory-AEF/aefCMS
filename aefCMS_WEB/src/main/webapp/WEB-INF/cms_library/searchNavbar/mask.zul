@@ -13,7 +13,7 @@
  							<hbox>
 								<radio label="Dark" value="navbar-dark bg-dark"/>
 								<div style="background-color:#383B43; width:20px; height:20px;"><space></space></div>
-									<radio label="Light" value="navbar-light bg-light"/>
+								<radio label="Light" value="navbar-light bg-light"/>
 								<div style="background-color:#F8F9Fa; width:20px; height:20px;"><space></space></div>
  							</hbox>
 						</radiogroup>
