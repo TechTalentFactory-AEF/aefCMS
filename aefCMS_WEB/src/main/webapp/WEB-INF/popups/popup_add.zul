@@ -1,26 +1,32 @@
-<window title="Add Element"
-    	mode="modal" 
-	    width="60%"
-    	height="70%"
-    	contentStyle="overflow:auto;"
+<window mode="modal" 
+		width="50%"
+    	contentStyle="overflow:auto"
  		style="padding: 0;">
- 		
- 	<!-- CLOSE BUTTON -->
-	<button label="Close Popup" onClick="@command('closePopup')"/>
-	<separator spacing="20px"/>
 	
-	<!-- SELECT MENU -->
-	<listbox model="@load(IndexVm.libraryElementList)" 
-			 selectedItem="@bind(IndexVm.selectedLibraryElement)"
-			 width="100%"
-			 rows="1"
-			 mold="select"/>
+	<div align="center">	
+		<vbox align="center">
+			<label value="Select the type of element to add:"/>
+			<!-- SELECT MENU -->
+			<listbox model="@load(IndexVm.libraryElementList)" 
+					 selectedItem="@bind(IndexVm.selectedLibraryElement)"
+					 mold="select" 
+					 rows="1"
+					 width="100%"/>
+		</vbox>
+	</div>	
 	<separator spacing="20px"/>
 	
 	<!-- VARIABLE FORM -->
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
 	<separator spacing="20px"/>
-
-	<!-- FINAL COMMAND BUTTON -->
-	<button visible="@load(not empty IndexVm.selectedLibraryElement)" label="ADD" onClick="@command('addElement')"/>
+	
+	<div align="center">	
+		<hbox>
+			<!-- CLOSE BUTTON -->
+			<button label="Close Popup" onClick="@command('closePopup')"/>
+			<separator />
+			<!-- FINAL COMMAND BUTTON -->
+			<button disabled="@load(empty IndexVm.selectedLibraryElement)" label="ADD" onClick="@command('addElement')"/>
+		</hbox>
+	</div>		
 </window>

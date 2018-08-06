@@ -208,7 +208,7 @@ public class IndexVM {
 		BindUtils.postNotifyChange(null, null, this, "selectedLibraryElement");	
 	}
 	
-	//IFRAME RESPONSIVITY
+	//IFRAME RESIZE
 	
 	@Command
 	@NotifyChange("iframeWidth")

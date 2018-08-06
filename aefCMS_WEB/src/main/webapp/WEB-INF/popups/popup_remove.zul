@@ -1,13 +1,15 @@
-<window title="Remove Element"
-    	mode="modal" 
+<window mode="modal" 
 	    width="30%"
-    	height="30%"
  		style="padding: 0;">
 	
-	<label value="Are you sure to remove the element?"/>
-	<separator spacing="20px"/>
-	<hbox>
-		<button label="No" onClick="@command('closePopup')"/>
-		<button label="Yes" onClick="@command('removeElement')"/>
-	</hbox>
+	<div align="center">	
+		<vbox align="center">
+			<label value="Are you sure to remove the element ?"/>
+			<separator spacing="20px"/>
+			<hbox>
+				<button label="No" onClick="@command('closePopup')"/>
+				<button label="Yes" onClick="@command('removeElement')"/>
+			</hbox>
+		</vbox>
+	</div>
 </window>
