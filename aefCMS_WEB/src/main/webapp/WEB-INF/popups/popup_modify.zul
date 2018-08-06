@@ -7,12 +7,12 @@
 	<div align="center">	
 		<vbox align="center">
 			<hbox>
-				<label value="Selected element Type: "/>
-				<label value="@load(IndexVm.draggableSelectedElement.pageElement.type.name)"/>
+				<label value="Selected element Type: " style="color: grey"/>
+				<label value="@load(IndexVm.draggableSelectedElement.pageElement.type.name)" />
 			</hbox>
 			<hbox>
-				<label value="Selected element ID: "/>
-				<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters['id'])"/>
+				<label value="Selected element ID: " style="color: grey"/>
+				<label value="@load(IndexVm.draggableSelectedElement.pageElement.parameters['id'])" />
 		</hbox>
 		</vbox>
 	</div>	
@@ -25,7 +25,7 @@
 	<div align="center">
 		<hbox>
 			<!-- CLOSE BUTTON -->
-			<button label="Close Popup" onClick="@command('closePopup')"/>
+			<button label="BACK" onClick="@command('closePopup')"/>
 			<separator />
 			<!-- FINAL COMMAND BUTTON -->
 			<button visible="@load(not empty IndexVm.selectedLibraryElement)" label="UPDATE" onClick="@command('editElement')"/>
