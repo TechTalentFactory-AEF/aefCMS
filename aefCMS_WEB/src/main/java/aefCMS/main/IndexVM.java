@@ -93,7 +93,7 @@ public class IndexVM {
 		if (draggableTreeModel == null) {
 			//init draggableTree using PageTree model data
 			PageElement modelRoot = model.getRoot();
-			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot, this);		//I need to pass the father so the son can notify it the elements movement
+			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot, this);		//I need to pass the father so the son can notify it the elements movement. TODO this solution is ugly (it sets a circularity between classes) so change it
 			draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
 			draggableTreeRoot.recomputeSpacersRecursive();
 		}
@@ -313,7 +313,7 @@ public class IndexVM {
 	
 	//
 	
-	/* MASK2 */
+	/* MASKN */
 	
 	//	
 	
