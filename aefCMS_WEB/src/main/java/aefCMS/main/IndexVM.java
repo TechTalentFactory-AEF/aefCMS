@@ -284,9 +284,8 @@ public class IndexVM {
 		model.print();
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
 		System.out.println("**DEBUG** (moveElement) The updated html:");
-		System.out.println("+ + + + + + + + + + + + + + + + + + +");
 		System.out.println(outputWebSiteHtml);
-		System.out.println("+ + + + + + + + + + + + + + + + + + +");
+		System.out.println("* * * * * * * * * * * * * * * * * * *");
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 		forceIframeRefresh();
 	}
