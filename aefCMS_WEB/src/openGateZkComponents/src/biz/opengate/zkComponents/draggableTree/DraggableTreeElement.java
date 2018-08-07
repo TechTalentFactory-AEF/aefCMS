@@ -103,6 +103,7 @@ public class DraggableTreeElement{
 		}
 		else {
 			DraggableTreeComponent.removeFromParent(this);
+			this.setParent(spacer.getParent());
 			int index=spacer.getParent().getChildren().indexOf(spacer);
 			spacer.getParent().getChildren().add(index, this);
 			spacer.getParent().recomputeSpacers();
