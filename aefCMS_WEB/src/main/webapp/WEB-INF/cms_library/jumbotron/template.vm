@@ -1,0 +1,7 @@
+<div id="$!{id}" class="jumbotron" style="$!{jumbotron-style}">
+	<div class="container" style="$!{container-style}">
+  		<h1 class="display-3">$!{jumbotron-title}</h1>
+ 		 <p>$!{jumbotron-text}</p>
+ 		 <p><a class="btn btn-primary btn-lg" href="$!{jumbo-button-link}" role="button">$!{jumbo-button-text}</a></p>
+    </div>
+ </div>

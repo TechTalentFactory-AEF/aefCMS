@@ -17,9 +17,23 @@
 		</vbox>
 	</div>	
 	<separator spacing="20px"/>
-	
-	<!-- FORM -->
-	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
+
+	<!-- VARIABLE FORM -->
+	<grid model="@load(IndexVm.selectedLibraryElement.attributes)">
+		<columns>
+			<column />
+			<column />
+		</columns>
+		<rows>
+			<template name="model">
+		        <row visible="${!each.equals('id') and !each.equals('children')}">
+		            <label value="@load(each)"/>
+		            <textbox value="@bind(IndexVm.attributesHashMap[each])"/>
+		        </row>
+	   		</template>
+	   	</rows>
+	</grid>
+	<!-- 	<include src="@load(IndexVm.selectedLibraryElementZul)"/> -->
 	<separator spacing="20px"/>
 		
 	<div align="center">
