@@ -101,7 +101,7 @@ public class IndexVM {
 		if (draggableTreeModel == null) {	
 			//init draggableTree using PageTree model data
 			PageElement modelRoot = model.getRoot();
-			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot,this);
+			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot, this);
 			
 			if (modelRoot.getChildren().size() > 0) {
 				for (PageElement child : modelRoot.getChildren()) {
@@ -339,7 +339,7 @@ public class IndexVM {
 	}
 	
 	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
-		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
+		DraggableTreeElementPlus draggableTreeNode = new DraggableTreeElementPlus(parent, node.getType().getName(), node, this);
 		if (node.getChildren().size() > 0) {
 			for (PageElement child : node.getChildren()) {
 				createDraggableTreeElement(child, draggableTreeNode);
