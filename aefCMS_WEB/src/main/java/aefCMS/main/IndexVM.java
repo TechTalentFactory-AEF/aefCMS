@@ -2,6 +2,7 @@ package aefCMS.main;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 
+import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.AfterCompose;
 import org.zkoss.bind.annotation.BindingParam;
@@ -26,8 +28,10 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.media.AMedia;
+import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WebApps;
+import org.zkoss.zk.ui.event.UploadEvent;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
@@ -40,10 +44,9 @@ import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
-	// LOGGER
+	//LOGGER
 	
-	private static final Logger logger = Logger.getLogger( IndexVM.class.getCanonicalName() );
-
+	private static final Logger logger = Logger.getLogger( IndexVM.class.getCanonicalName() );		//TODO change all debug and error prints with logging
 	
 	//PATHS
 	
@@ -52,14 +55,14 @@ public class IndexVM {
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.   add -> /WEB-INF/popups/popup_add.zul
 	private final String OUT_FILE_NAME	   = "index";							//ex. index -> index.html
-	private final String SAVE_P_TREE_PATH  = CONTEXT_PATH + "WEB-INF/saved_page_tree.json";
 	
 	//ASSETS
 	
 	private Library lib;
 	private HtmlRenderer iframeRenderer;
 	private PageTree model;
-	private File tempGeneratedWebSite;
+	private File generatedWebSiteTempFile;
+	private File generatedJsonTempFile;
 	
 	//ZK ATTRIBUTES
 	
@@ -95,7 +98,6 @@ public class IndexVM {
 		this.iframeWidth = iframeWidth;
 	}
 	
-	//TODO modify this when loading from json	
 	public DraggableTreeModel getDraggableTreeModel() throws IOException {	
 		
 		if (draggableTreeModel == null) {	
@@ -114,11 +116,6 @@ public class IndexVM {
 		
 		return draggableTreeModel;
 	}
-	
-	
-	
-	
-	
 	
 	public DraggableTreeElementPlus getDraggableTreeRoot() {
 		return draggableTreeRoot;
@@ -177,33 +174,35 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		// try to reload pageTree from disk otherwise default page is created
-		try {
-			model = PageTreeSerializer.loadTreeFromDisc(SAVE_P_TREE_PATH, ABS_LIBRARY_PATH);
-			logger.log( Level.INFO, "Loaded tree from disk");
-		}
-		catch (Exception e){
-			e.printStackTrace();
-			Map<String, String> stdPageAttributes = new HashMap<String, String>();
-			stdPageAttributes.put("id", UUID.randomUUID().toString());
-			stdPageAttributes.put("title", "My Web Page");
-			stdPageAttributes.put("debug", "#f2f2f2");	//DEBUG  (#f2f2f2 = light gray)
-			PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-			model = new PageTree(stdPage);
-			PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
-			logger.log( Level.INFO, "Default tree created and saved");
-		}
+		//create default model
+		System.out.println("**DEBUG** (init) No json file found, creating default model.");
+		Map<String, String> stdPageAttributes = new HashMap<String, String>();
+		stdPageAttributes.put("id", UUID.randomUUID().toString());
+		stdPageAttributes.put("title", "My Web Page");
+		stdPageAttributes.put("debug", "#f2f2f2");	//DEBUG  (#f2f2f2 = light gray)
+		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+		model = new PageTree(stdPage);
+		logger.log( Level.INFO, "Default tree created");
+
 		
-		//create temporary file
+		//create temporary files
 		ServletContext webAppcontext = WebApps.getCurrent().getServletContext();
 		File webAppTempDir = (File) webAppcontext.getAttribute("javax.servlet.context.tempdir");
-		tempGeneratedWebSite = File.createTempFile(OUT_FILE_NAME, ".html", webAppTempDir);
-		System.out.println("**DEBUG** (init) File tempGeneratedWebSite: " + tempGeneratedWebSite);
-		tempGeneratedWebSite.deleteOnExit();
+		System.out.println("**DEBUG** (init) Got webAppTempDir: " + webAppTempDir);
 		
-		//generate initial html and save it to file
+		generatedWebSiteTempFile = File.createTempFile(OUT_FILE_NAME, ".html", webAppTempDir);
+		System.out.println("**DEBUG** (init) Created new generatedWebSiteTempFile: " + generatedWebSiteTempFile);
+		generatedWebSiteTempFile.deleteOnExit();
+		
+		generatedJsonTempFile = File.createTempFile(OUT_FILE_NAME, ".json", webAppTempDir);
+		System.out.println("**DEBUG** (init) Created new generatedJsonTempFile: " + generatedJsonTempFile);
+		generatedJsonTempFile.deleteOnExit();
+		
+		//generate initial html and save it to files
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		saveWebSiteHtmlToFile(generatedWebSiteTempFile, outputWebSiteHtml);
+		saveWebSiteJsonToFile(generatedJsonTempFile, model);
+		
 	}	
 	
 	@AfterCompose
@@ -211,7 +210,7 @@ public class IndexVM {
     public void afterCompose(@ContextParam(ContextType.VIEW) Component view) throws FileNotFoundException {
 		Selectors.wireComponents(view, this, false);	//NOTE can't put this in a @init
 		
-		AMedia generatedWebSiteMedia = new AMedia(tempGeneratedWebSite, "text/html", null);
+		AMedia generatedWebSiteMedia = new AMedia(generatedWebSiteTempFile, "text/html", null);
 		iframeInsideZul.setContent(generatedWebSiteMedia);	
 		
 		iframeWidth = "100%";
@@ -262,9 +261,8 @@ public class IndexVM {
 		draggableTreeRoot.recomputeSpacersRecursive();
 
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		saveWebSiteHtmlToFile(generatedWebSiteTempFile, outputWebSiteHtml);
 		forceIframeRefresh();
-		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
 		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
 		
@@ -281,9 +279,8 @@ public class IndexVM {
 		draggableTreeRoot.recomputeSpacersRecursive();
 		
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		saveWebSiteHtmlToFile(generatedWebSiteTempFile, outputWebSiteHtml);
 		forceIframeRefresh();
-		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
 		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
 		//TODO the father should be the selected element after the removal
 		closePopup();
@@ -297,9 +294,9 @@ public class IndexVM {
 		draggableSelectedElement.getPageElement().setParameters(attributesHashMap);		//NOTE attributesHashMap values are *copied* inside the new element map
 		
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		saveWebSiteHtmlToFile(generatedWebSiteTempFile, outputWebSiteHtml);
 		forceIframeRefresh();
-		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+
 		closePopup();
 		
 		System.out.println("**DEBUG** (editElement) Model tree after edit:");
@@ -315,22 +312,59 @@ public class IndexVM {
 		System.out.println("**DEBUG** (moveElement) The updated html:");
 		System.out.println(outputWebSiteHtml);
 		System.out.println("* * * * * * * * * * * * * * * * * * *");
-		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
-		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+		saveWebSiteHtmlToFile(generatedWebSiteTempFile, outputWebSiteHtml);
 		forceIframeRefresh();
 	}
 
-	//EXPORT HTML
+	//EXPORTS-IMPORTS
 	
 	@Command
 	public void exportHtml() throws FileNotFoundException {
-		Filedownload.save(tempGeneratedWebSite, "text/html");
+		Filedownload.save(generatedWebSiteTempFile, "text/html");
+		System.out.println("**DEBUG** (exportHtml) Exported: " + generatedWebSiteTempFile);
+	}
+	
+	@Command
+	public void exportJson() throws FileNotFoundException, IOException {
+		saveWebSiteJsonToFile(generatedJsonTempFile, model);
+		Filedownload.save(generatedJsonTempFile, "application/json");
+		System.out.println("**DEBUG** (exportJson) Exported: " + generatedJsonTempFile);
+	}
+	
+	@Command
+	@NotifyChange({"draggableTreeModel"})
+	public void uploadJson(@ContextParam(ContextType.BIND_CONTEXT) BindContext ctx) throws ResourceNotFoundException, ParseErrorException, IOException, Exception {
+		System.out.println("**DEBUG** (uploadJson) Uploading Json file.");
+		
+		UploadEvent upEvent = (UploadEvent) ctx.getTriggerEvent();
+		Media upMedia = upEvent.getMedia();
+		
+		if( ! upMedia.getContentType().equals("application/json") ) {
+			throw new IOException("**ERROR** (uploadJson) The uploaded file is not a json file");
+		}
+		
+		FileOutputStream jsonUploadStream = new FileOutputStream(generatedJsonTempFile);
+		jsonUploadStream.write(upMedia.getByteData());
+		
+		
+		model = PageTreeSerializer.loadTreeFromDisc(generatedJsonTempFile.getCanonicalPath(), ABS_LIBRARY_PATH);
+		System.out.println("**DEBUG** (uploadJson) PageModel generated from uploaded JSON:");
+		model.print();
+		
+		draggableTreeModel = null; 	//necessary to force getDraggableTreeModel to rebuild its tree from scratch
+		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
+		saveWebSiteHtmlToFile(generatedWebSiteTempFile, outputWebSiteHtml);
+		forceIframeRefresh();
 	}
 	
 	//UTILITIES
 
-	private void saveWebSiteToFile(File destinationFile , StringBuffer sourceHtml) throws IOException {
+	private void saveWebSiteHtmlToFile(File destinationFile , StringBuffer sourceHtml) throws IOException {
 		FileUtils.writeStringToFile(destinationFile, sourceHtml.toString(), "UTF-8"); 
+	}
+	
+	private void saveWebSiteJsonToFile(File destinationFile , PageTree model) throws IOException {
+		PageTreeSerializer.saveTreeToDisc(destinationFile.getCanonicalPath(), model);
 	}
 	
 	private void forceIframeRefresh() {	
@@ -346,16 +380,6 @@ public class IndexVM {
 			}
 		}
 	}
-	
-	/************************** MASKS CODE **************************/
-	
-	/* MASK1 */
-	
-	//
-	
-	/* MASKN */
-	
-	//	
 	
 }	
 	
