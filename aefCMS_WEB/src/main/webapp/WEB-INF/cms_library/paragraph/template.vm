@@ -1,1 +1,1 @@
-<p id="$!{id}" style="color: $!{text-color}; font-size: $!{text-size}px;">$!{text}</p>
+<p id="$!{id}" style="$!{paragraph-style}">$!{text}</p>

@@ -21,7 +21,7 @@ public class PageTreeSerializer {
 	
 	// SAVE PAGETREE	
 	public static void saveTreeToDisc(String savePageTreePath, PageTree currentTree) throws IOException {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new Gson();
 		Writer treeWriterUpdate = new FileWriter(savePageTreePath);
 
 		gson.toJson(currentTree.getRoot(), treeWriterUpdate);
@@ -36,7 +36,8 @@ public class PageTreeSerializer {
 		// main	json object
 		JsonObject loadedPageTree = (JsonObject) parser.parse(reader);
 		// new empty root
-		PageElement root = new PageElement(null, null);
+		Map<String, String> attributeMap = new HashMap<String, String>();
+		PageElement root = new PageElement(null, attributeMap);
 		// reload root and get inner jsonobject
 		root = reloadElementRecursive(libraryPath, root,loadedPageTree, true);
 

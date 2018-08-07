@@ -10,7 +10,7 @@
     	
 		<title>$!{title}</title>
 	</head>
-	<body style="background-color: $!{debug}">	<!-- I color the background just to test if the iframe has been loaded -->
+	<body style="$!{stdPage-style}">
 		
 		$!{children}
 		
@@ -20,3 +20,7 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	</body>
 </html>
+
+
+		
+		

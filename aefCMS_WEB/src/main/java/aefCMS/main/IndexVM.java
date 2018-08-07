@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
@@ -38,6 +40,11 @@ import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
 	
+	// LOGGER
+	
+	private static final Logger logger = Logger.getLogger( IndexVM.class.getCanonicalName() );
+
+	
 	//PATHS
 	
 	private final String CONTEXT_PATH 	   = WebApps.getCurrent().getServletContext().getRealPath("/");	//TODO change this (v. github issues)
@@ -45,6 +52,7 @@ public class IndexVM {
 	private final String ABS_LIBRARY_PATH  = CONTEXT_PATH + REL_LIBRARY_PATH;
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.   add -> /WEB-INF/popups/popup_add.zul
 	private final String OUT_FILE_NAME	   = "index";							//ex. index -> index.html
+	private final String SAVE_P_TREE_PATH  = CONTEXT_PATH + "WEB-INF/saved_page_tree.json";
 	
 	//ASSETS
 	
@@ -64,22 +72,21 @@ public class IndexVM {
 	private DraggableTreeElementPlus draggableSelectedElement;
 	
 	private String selectedPopupType;
-	private List<String> libraryElementList;
-	private String selectedLibraryElement;
+	private List<LibraryElement> libraryElementList;
+	private LibraryElement selectedLibraryElement;
 	private Map<String, String> attributesHashMap = new HashMap<String, String>();
 	
 	//GETTERS SETTERS
 	
-	public List<String> getLibraryElementList() {		
+	public List<LibraryElement> getLibraryElementList() {		
 		if (libraryElementList == null) {
-			libraryElementList = new ArrayList<String>();
-			for(LibraryElement libEl : lib.getElements())
-				libraryElementList.add(libEl.getName());
-			libraryElementList.sort(null);	
+			libraryElementList = new ArrayList<LibraryElement>();
+			for(LibraryElement libEl : lib.getElements()) {
+				libraryElementList.add(libEl);
+			}
 		}
 		return libraryElementList;
-	}
-	
+	}	
 	public String getIframeWidth() {
 		return iframeWidth;
 	}
@@ -88,17 +95,30 @@ public class IndexVM {
 		this.iframeWidth = iframeWidth;
 	}
 	
-	//TODO modify this when loading from json
-	public DraggableTreeModel getDraggableTreeModel() {	
-		if (draggableTreeModel == null) {
+	//TODO modify this when loading from json	
+	public DraggableTreeModel getDraggableTreeModel() throws IOException {	
+		
+		if (draggableTreeModel == null) {	
 			//init draggableTree using PageTree model data
 			PageElement modelRoot = model.getRoot();
-			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot, this);		//I need to pass the father so the son can notify it the elements movement. TODO this solution is ugly (it sets a circularity between classes) so change it
+			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot,this);
+			
+			if (modelRoot.getChildren().size() > 0) {
+				for (PageElement child : modelRoot.getChildren()) {
+					createDraggableTreeElement(child, draggableTreeRoot);
+				}
+			}
 			draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
 			draggableTreeRoot.recomputeSpacersRecursive();
-		}
+		} 
+		
 		return draggableTreeModel;
 	}
+	
+	
+	
+	
+	
 	
 	public DraggableTreeElementPlus getDraggableTreeRoot() {
 		return draggableTreeRoot;
@@ -122,12 +142,12 @@ public class IndexVM {
 		return path;
 	}
 	
-	public String getSelectedLibraryElement() {
+	public LibraryElement getSelectedLibraryElement() {
 		return selectedLibraryElement;
 	}
 	
 	@NotifyChange({"selectedLibraryElement","selectedLibraryElementZul","attributesHashMap"})
-	public void setSelectedLibraryElement(String selectedLibraryElement) {
+	public void setSelectedLibraryElement(LibraryElement selectedLibraryElement) {
 		this.selectedLibraryElement = selectedLibraryElement;
 		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
 	}
@@ -157,13 +177,22 @@ public class IndexVM {
 		
 		iframeRenderer = new HtmlRenderer(ABS_LIBRARY_PATH);
 		
-		//TODO modify this when loading from json
-		Map<String, String> stdPageAttributes = new HashMap<String, String>();
-		stdPageAttributes.put("id", UUID.randomUUID().toString());
-		stdPageAttributes.put("title", "My Web Page");
-		stdPageAttributes.put("debug", "#f2f2f2");	//DEBUG  (#f2f2f2 = light gray)
-		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
-		model = new PageTree(stdPage);
+		// try to reload pageTree from disk otherwise default page is created
+		try {
+			model = PageTreeSerializer.loadTreeFromDisc(SAVE_P_TREE_PATH, ABS_LIBRARY_PATH);
+			logger.log( Level.INFO, "Loaded tree from disk");
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			Map<String, String> stdPageAttributes = new HashMap<String, String>();
+			stdPageAttributes.put("id", UUID.randomUUID().toString());
+			stdPageAttributes.put("title", "My Web Page");
+			stdPageAttributes.put("debug", "#f2f2f2");	//DEBUG  (#f2f2f2 = light gray)
+			PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
+			model = new PageTree(stdPage);
+			PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
+			logger.log( Level.INFO, "Default tree created and saved");
+		}
 		
 		//create temporary file
 		ServletContext webAppcontext = WebApps.getCurrent().getServletContext();
@@ -196,7 +225,7 @@ public class IndexVM {
 		selectedPopupType = popupType;
 		if (popupType.equals("modify")) {
 			PageElement modelSelectedElement = draggableSelectedElement.getPageElement();
-			selectedLibraryElement = modelSelectedElement.getType().getName();
+			selectedLibraryElement = modelSelectedElement.getType();
 			attributesHashMap.putAll(modelSelectedElement.getParameters());
 		}
 	}
@@ -226,16 +255,16 @@ public class IndexVM {
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void addElement() throws ResourceNotFoundException, ParseErrorException, Exception {
 		attributesHashMap.put("id", UUID.randomUUID().toString());
-		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);	//NOTE attributesHashMap values are *copied* inside the new element map
+		PageElement newPageElement = new PageElement(selectedLibraryElement, attributesHashMap);	//NOTE attributesHashMap values are *copied* inside the new element map
 		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
 		
-		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement, this);	//NOTE: the element is also added to the draggableTree
+		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement.getName(), newPageElement, this);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
 
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 		forceIframeRefresh();
-		
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
 		//draggableSelectedElement = newDraggableElementPlus;		//the new element will be selected after creation	//TODO TOFIX (in .zul there's only @save)
 		closePopup();
 		
@@ -254,7 +283,7 @@ public class IndexVM {
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 		forceIframeRefresh();
-		
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
 		draggableSelectedElement = null;	//if not set null I could still select "add" button on the removed element!
 		//TODO the father should be the selected element after the removal
 		closePopup();
@@ -270,7 +299,7 @@ public class IndexVM {
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
 		forceIframeRefresh();
-		
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
 		closePopup();
 		
 		System.out.println("**DEBUG** (editElement) Model tree after edit:");
@@ -287,6 +316,7 @@ public class IndexVM {
 		System.out.println(outputWebSiteHtml);
 		System.out.println("* * * * * * * * * * * * * * * * * * *");
 		saveWebSiteToFile(tempGeneratedWebSite, outputWebSiteHtml);
+		PageTreeSerializer.saveTreeToDisc(SAVE_P_TREE_PATH, model);
 		forceIframeRefresh();
 	}
 
@@ -306,6 +336,15 @@ public class IndexVM {
 	private void forceIframeRefresh() {	
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
 		System.out.println("**DEBUG** (forceIframeRefresh) ***Done forced Iframe refresh***");
+	}
+	
+	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
+		DraggableTreeElement draggableTreeNode = new DraggableTreeElement(parent, node.getType().getName());
+		if (node.getChildren().size() > 0) {
+			for (PageElement child : node.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeNode);
+			}
+		}
 	}
 	
 	/************************** MASKS CODE **************************/
