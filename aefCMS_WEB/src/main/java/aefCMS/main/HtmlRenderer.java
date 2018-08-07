@@ -33,7 +33,7 @@ public class HtmlRenderer {
 	
 	public StringBuffer render(PageElement pe) throws ResourceNotFoundException, ParseErrorException, Exception {
 
-		Template peTemplate = ve.getTemplate(StringUtils.difference(velocityTemplatesPath, pe.getType().getTemplate()));
+		Template peTemplate = ve.getTemplate(StringUtils.difference(velocityTemplatesPath, pe.getType().getPath() + "/template.vm"));
 		VelocityContext peContext = new VelocityContext(pe.getParameters());
 		
 		if (! (pe.getChildren() == null || pe.getChildren().isEmpty())) {
