@@ -1,0 +1,9 @@
+<nav id="$!{id}" class="navbar navbar-expand-md navbar-light bg-light" style="$!{style}"> 
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#innerbar-$!{id}" aria-controls="navbarsExample" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="innerbar-$!{id}">
+  	$!{children}
+  </div>
+</nav>

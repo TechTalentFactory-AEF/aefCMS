@@ -1,8 +1,0 @@
-<div id="$!{id}" class="card" style="$!{card-style}">
-  <img class="card-img-top" src="$!{card-image-src};" alt="$!{image-description-text};">
-  <div class="card-body" style="$!{card-body-style}">
-    <h5 class="card-title">$!{card-text}</h5>
-    <p class="card-text">$!{card-text}</p>
-    <a href="$!{card-button-link};" class="btn btn-primary">$!{jumbo-button-text}</a>
-  </div>
-</div>

@@ -1,0 +1,3 @@
+<ul id="$!{id}" class="navbar-nav mr-auto" style="$!{style}">
+	$!{children}
+</ul>
