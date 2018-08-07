@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class PageElement {
-
+	
+	private static final String RECURSIVE_PRINT_SEPARATOR = "- ";
+	
 	private transient PageElement parent;
 	private LibraryElement type;
 	private Map<String, String> parameters;
@@ -67,19 +69,19 @@ public class PageElement {
 	//PRINT ELEMENT
 	
 	public void printRecursive() {
-		printRecursive("-");
+		printRecursive(RECURSIVE_PRINT_SEPARATOR);
 	}
 	
-	private void printRecursive(String dist) {
+	private void printRecursive(String separator) {
 		
-		System.out.print(dist + " type=" + type.getName() + ", parameters={ ");
+		System.out.print(separator + "type=" + type.getName() + ", parameters={ ");
 		for (Entry<String, String> par : parameters.entrySet()) 
 			System.out.print(par + ", ");
 		System.out.println("}");
 		
 		if(! children.isEmpty()) {
 			for (PageElement child : children)
-				child.printRecursive(dist + " " + dist);
+				child.printRecursive(separator + RECURSIVE_PRINT_SEPARATOR);
 		}
 	}
 
