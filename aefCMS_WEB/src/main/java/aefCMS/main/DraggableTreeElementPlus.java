@@ -19,7 +19,8 @@ public class DraggableTreeElementPlus extends DraggableTreeElement {
 	public PageElement getPageElement() {
 		return pageElement;
 	}
-
+	
+	@Override
 	protected void addAt(DraggableTreeElement spacer) {
 		DraggableTreeElementPlus newParent = (DraggableTreeElementPlus) spacer.getParent();
 		int oldIndex = pageElement.getParent().getChildren().indexOf(pageElement);
@@ -51,6 +52,7 @@ public class DraggableTreeElementPlus extends DraggableTreeElement {
 		}
 	}
 
+	@Override
 	protected void addTo(DraggableTreeElement newParent) {
 		DraggableTreeElementPlus newParentPlus = (DraggableTreeElementPlus) newParent;
 		newParentPlus.getPageElement().getChildren().add(pageElement);	
