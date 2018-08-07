@@ -21,12 +21,17 @@ public class DraggableTreeElementPlus extends DraggableTreeElement {
 	}
 
 	protected void addAt(DraggableTreeElement spacer) {
-		super.addAt(spacer);
-		this.getPageElement().getParent().getChildren().remove(this.getPageElement());
 		DraggableTreeElementPlus newParent = (DraggableTreeElementPlus) spacer.getParent();
-		this.getPageElement().setParent(newParent.getPageElement());
-		int index = spacer.getParent().getChildren().indexOf(spacer) / 2;
-		newParent.getPageElement().getChildren().add(index, this.getPageElement());
+		int oldIndex = pageElement.getParent().getChildren().indexOf(pageElement);
+		int newIndex = spacer.getParent().getChildren().indexOf(spacer) / 2;
+		newParent.getPageElement().getChildren().add(newIndex, pageElement);
+		if (newIndex > oldIndex) {
+			pageElement.getParent().getChildren().remove(oldIndex);
+		} else {
+			pageElement.getParent().getChildren().remove(oldIndex + 1);
+		}
+		pageElement.setParent(newParent.getPageElement());
+		super.addAt(spacer);
 		
 		try {
 			notifyFatherOfElementsMovement();
@@ -43,11 +48,11 @@ public class DraggableTreeElementPlus extends DraggableTreeElement {
 	}
 
 	protected void addTo(DraggableTreeElement newParent) {
-		super.addTo(newParent);
-		this.getPageElement().getParent().getChildren().remove(this.getPageElement());
 		DraggableTreeElementPlus newParentPlus = (DraggableTreeElementPlus) newParent;
-		this.getPageElement().setParent(newParentPlus.getPageElement());
-		newParentPlus.getPageElement().getChildren().add(this.getPageElement());	
+		newParentPlus.getPageElement().getChildren().add(pageElement);	
+		pageElement.getParent().getChildren().remove(this.getPageElement());
+		pageElement.setParent(newParentPlus.getPageElement());
+		super.addTo(newParent);
 		
 		try {
 			notifyFatherOfElementsMovement();
