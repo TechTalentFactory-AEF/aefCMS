@@ -33,6 +33,7 @@ import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Iframe;
 
 import biz.opengate.zkComponents.draggableTree.DraggableTreeComponent;
+import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
@@ -92,7 +93,7 @@ public class IndexVM {
 		if (draggableTreeModel == null) {
 			//init draggableTree using PageTree model data
 			PageElement modelRoot = model.getRoot();
-			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot, this);		//I need to pass the father so the son can notify it the elements movement
+			draggableTreeRoot = new DraggableTreeElementPlus(null, modelRoot.getType().getName(), modelRoot, this);		//I need to pass the father so the son can notify it the elements movement. TODO this solution is ugly (it sets a circularity between classes) so change it
 			draggableTreeModel = new DraggableTreeModel(draggableTreeRoot);
 			draggableTreeRoot.recomputeSpacersRecursive();
 		}
@@ -107,8 +108,9 @@ public class IndexVM {
 		return draggableSelectedElement;
 	}
 
-	public void setDraggableSelectedElement(DraggableTreeElementPlus draggableSelectedElement) {
-		this.draggableSelectedElement = draggableSelectedElement;
+	public void setDraggableSelectedElement(DraggableTreeElement draggableSelectedElement) {
+		if (draggableSelectedElement instanceof DraggableTreeElementPlus)
+			this.draggableSelectedElement = (DraggableTreeElementPlus) draggableSelectedElement;
 	}
 	
 	public String getSelectedPopupPath() {
@@ -304,6 +306,16 @@ public class IndexVM {
 		Clients.evalJavaScript("document.getElementsByTagName(\"iframe\")[0].contentWindow.location.reload(true);");	//see: https://stackoverflow.com/questions/13477451/can-i-force-a-hard-refresh-on-an-iframe-with-javascript?lq=1
 		System.out.println("**DEBUG** (forceIframeRefresh) ***Done forced Iframe refresh***");
 	}
+	
+	/************************** MASKS CODE **************************/
+	
+	/* MASK1 */
+	
+	//
+	
+	/* MASKN */
+	
+	//	
 	
 }	
 	
