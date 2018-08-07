@@ -25,10 +25,14 @@ public class DraggableTreeElementPlus extends DraggableTreeElement {
 		int oldIndex = pageElement.getParent().getChildren().indexOf(pageElement);
 		int newIndex = spacer.getParent().getChildren().indexOf(spacer) / 2;
 		newParent.getPageElement().getChildren().add(newIndex, pageElement);
-		if (newIndex > oldIndex) {
+		if (newParent != this.getParent()) {
 			pageElement.getParent().getChildren().remove(oldIndex);
 		} else {
-			pageElement.getParent().getChildren().remove(oldIndex + 1);
+			if (newIndex > oldIndex) {
+				pageElement.getParent().getChildren().remove(oldIndex);
+			} else {
+				pageElement.getParent().getChildren().remove(oldIndex + 1);
+			}
 		}
 		pageElement.setParent(newParent.getPageElement());
 		super.addAt(spacer);
