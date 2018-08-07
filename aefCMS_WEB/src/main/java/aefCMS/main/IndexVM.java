@@ -70,9 +70,9 @@ public class IndexVM {
 	public List<LibraryElement> getLibraryElementList() {		
 		if (libraryElementList == null) {
 			libraryElementList = new ArrayList<LibraryElement>();
-			for(LibraryElement libEl : lib.getElements())
+			for(LibraryElement libEl : lib.getElements()) {
 				libraryElementList.add(libEl);
-			libraryElementList.sort(null);	
+			}
 		}
 		return libraryElementList;
 	}	
@@ -116,11 +116,11 @@ public class IndexVM {
 		return selectedLibraryElement;
 	}
 	
-	@NotifyChange({"selectedLibraryElement","selectedLibraryElementZul","attributesHashMap"})
-	public void setSelectedLibraryElement(String selectedLibraryElement) {
-		this.selectedLibraryElement = selectedLibraryElement;
-		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
-	}
+//	@NotifyChange({"selectedLibraryElement","selectedLibraryElementZul","attributesHashMap"})
+//	public void setSelectedLibraryElement(String selectedLibraryElement) {
+//		this.selectedLibraryElement = selectedLibraryElement;
+//		attributesHashMap.clear();	//clean the hashmap every time a different type is chosen (otherwise, when you return back to old type, the old values would still be there)
+//	}
 
 
 //	public String getSelectedLibraryElementZul() {
@@ -184,7 +184,7 @@ public class IndexVM {
 		selectedPopupType = popupType;
 		if (popupType.equals("modify")) {
 			PageElement modelSelectedElement = draggableSelectedElement.getPageElement();
-			selectedLibraryElement = modelSelectedElement.getType().getName();
+			selectedLibraryElement = modelSelectedElement.getType();
 			attributesHashMap.putAll(modelSelectedElement.getParameters());
 		}
 	}
@@ -206,10 +206,10 @@ public class IndexVM {
 	@NotifyChange({"draggableTreeModel","draggableSelectedElement"})
 	public void addElement() throws ResourceNotFoundException, ParseErrorException, Exception {
 		attributesHashMap.put("id", UUID.randomUUID().toString());
-		PageElement newPageElement = new PageElement(lib.getElement(selectedLibraryElement), attributesHashMap);	//NOTE attributesHashMap values are *copied* inside the new element map
+		PageElement newPageElement = new PageElement(selectedLibraryElement, attributesHashMap);	//NOTE attributesHashMap values are *copied* inside the new element map
 		model.addElement(newPageElement, draggableSelectedElement.getPageElement());
 		
-		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement, newPageElement, this);	//NOTE: the element is also added to the draggableTree
+		DraggableTreeElementPlus newDraggableElementPlus = new DraggableTreeElementPlus(draggableSelectedElement, selectedLibraryElement.getName(), newPageElement, this);	//NOTE: the element is also added to the draggableTree
 		draggableTreeRoot.recomputeSpacersRecursive();
 
 		StringBuffer outputWebSiteHtml = iframeRenderer.render(model);

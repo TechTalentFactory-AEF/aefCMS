@@ -15,7 +15,7 @@
 			 width="100%"
 			 rows="1"
 			 mold="select">
-		<template name="libElement">
+		<template name="model">
        		<listitem>
             	<listcell label="@load(each.name)"/>
         	</listitem>
@@ -25,26 +25,19 @@
 	
 	<!-- VARIABLE FORM -->
 	<grid model="@load(IndexVm.selectedLibraryElement.attributes)">
-		<colums>
-			<column hflex="min"/>
+		<columns>
 			<column />
-		</colums>
-		<template name="elementAttribute">
-	        <row>
-	            <label value="@load(each)"
-	            <textbox value="@bind(IndexVm.attributesHashMap)"
-	        </row>
-   		</template>
+			<column />
+		</columns>
 		<rows>
-			<row>
-				<template name="elementAttribute">
-		       		<listitem>
-		            	<listcell label="@load(each.name)"/>
-		        	</listitem>
-		        </template>
-	        </row>
-        </rows>
-	</listbox>
+			<template name="model">
+		        <row visible="${!each.equals('id') and !each.equals('children')}">
+		            <label value="@load(each)"/>
+		            <textbox value="@bind(IndexVm.attributesHashMap[each])"/>
+		        </row>
+	   		</template>
+	   	</rows>
+	</grid>
 	<!-- 
 	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
 	 -->
