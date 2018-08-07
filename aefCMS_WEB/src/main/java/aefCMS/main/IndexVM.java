@@ -107,10 +107,12 @@ public class IndexVM {
 	public DraggableTreeElementPlus getDraggableSelectedElement() {
 		return draggableSelectedElement;
 	}
-
+	
 	public void setDraggableSelectedElement(DraggableTreeElement draggableSelectedElement) {
 		if (draggableSelectedElement instanceof DraggableTreeElementPlus)
 			this.draggableSelectedElement = (DraggableTreeElementPlus) draggableSelectedElement;
+		else 
+			this.draggableSelectedElement = null;
 	}
 	
 	public String getSelectedPopupPath() {
