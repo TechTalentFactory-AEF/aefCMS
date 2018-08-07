@@ -81,6 +81,7 @@ public class IndexVM {
 	
 	//GETTERS SETTERS
 	
+	//TODO add sorting
 	public List<LibraryElement> getLibraryElementList() {		
 		if (libraryElementList == null) {
 			libraryElementList = new ArrayList<LibraryElement>();
@@ -99,7 +100,6 @@ public class IndexVM {
 	}
 	
 	public DraggableTreeModel getDraggableTreeModel() throws IOException {	
-		
 		if (draggableTreeModel == null) {	
 			//init draggableTree using PageTree model data
 			PageElement modelRoot = model.getRoot();
@@ -167,6 +167,7 @@ public class IndexVM {
 	//INITIALIZATION
 	
 	@Init
+	//TODO add file checks
 	@NotifyChange("draggableTreeModel")
 	public void init() throws ResourceNotFoundException, ParseErrorException, Exception {
 		
