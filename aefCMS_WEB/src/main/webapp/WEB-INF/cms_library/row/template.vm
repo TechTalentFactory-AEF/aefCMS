@@ -1,3 +1,0 @@
-<div id="$!{id}" class="row" style="$!{row-style}">
-  $!{children}
-</div>

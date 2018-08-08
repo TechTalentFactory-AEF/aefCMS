@@ -1,0 +1,3 @@
+<div id="$!{id}" class="jumbotron" style="$!{jumbotron-style}">
+	$!{children}
+ </div>

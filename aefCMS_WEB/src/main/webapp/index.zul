@@ -12,7 +12,7 @@
 				<vlayout id="editableTree" vflex="1">
 					<div sclass="button-bar" >
 						<hlayout>
-							<button height="40px" iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='add')"/>
+							<button height="40px" iconSclass="z-icon-plus" disabled="@load(empty IndexVm.draggableSelectedElement or empty IndexVm.draggableSelectedElement.pageElement.type.allowedChildren)" onClick="@command('openPopup', popupType='add')"/>
 							<button height="40px" iconSclass="z-icon-minus" disabled="@load(empty IndexVm.draggableSelectedElement or (IndexVm.draggableSelectedElement eq IndexVm.draggableTreeRoot))" onClick="@command('openPopup', popupType='remove')"/>
 							<button height="40px" iconSclass="z-icon-gear" disabled="@load(empty IndexVm.draggableSelectedElement)" onClick="@command('openPopup', popupType='modify')"/>
 						</hlayout>

@@ -1,0 +1,1 @@
+ <p id="$!{id}" class="card-text" style="$!{style}" >$!{card-text}</p>

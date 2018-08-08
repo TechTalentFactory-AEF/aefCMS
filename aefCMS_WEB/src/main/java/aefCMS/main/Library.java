@@ -12,7 +12,7 @@ public class Library {
 	public Library(File root) throws IOException {
 		elements = new ArrayList<LibraryElement>();
 		for (File directory : root.listFiles()) {
-			elements.add(new LibraryElement(directory.getName(), directory.getPath() + "/template.vm"));
+			elements.add(new LibraryElement(directory.getName(), directory.getPath()));
 		}
 	}
 	
