@@ -43,7 +43,6 @@ import biz.opengate.zkComponents.draggableTree.DraggableTreeElement;
 import biz.opengate.zkComponents.draggableTree.DraggableTreeModel;
 
 public class IndexVM {
-	//newnewmaster
 	
 	//LOGGER
 	
