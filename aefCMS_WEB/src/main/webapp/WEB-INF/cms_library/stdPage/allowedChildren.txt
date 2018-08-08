@@ -1,8 +1,14 @@
+${a_btn-primary}
 ${div}
 ${div_card}
+${div_carousel}
 ${div_container}
 ${div_container-fluid}
+${div_dropdown}
 ${div_jumbotron}
 ${h1}
+${img}
 ${nav_navbar}
+${ol}
+${ul}
 ${p}
