@@ -1,1 +1,1 @@
-<input id=$!{id} class="form-control" type="password" placeholder=$!{placeholder} style="$!{style}">
+<input id=$!{id} class="form-control" type="password" placeholder="$!{placeholder}" style="$!{style}">
