@@ -1,0 +1,4 @@
+<div style="background-color: #f2f2f2">
+	<p style="margin: 0 0 -0.3rem 1.3rem; font-style: italic; text-decoration: underline; color: grey;">$!{file-title}</p>
+	<pre><code class="$!{language}" style="background-color: #f2f2f2">$!{source-code}</code></pre>
+</div>
