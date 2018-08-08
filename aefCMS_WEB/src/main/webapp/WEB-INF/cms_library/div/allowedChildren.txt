@@ -1,7 +1,11 @@
+${a_btn-primary}
 ${div}
 ${div_card}
 ${div_container}
 ${div_container-fluid}
-${p}
 ${div_row}
 ${h1}
+${h5}
+${ol}
+${p}
+${ul}

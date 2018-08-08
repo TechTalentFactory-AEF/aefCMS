@@ -1,0 +1,3 @@
+<ol id="$!{id}" start="$!{start}" $!{reversed} type="$!{type}" style="$!{style}">
+	$!{children}
+</ol>

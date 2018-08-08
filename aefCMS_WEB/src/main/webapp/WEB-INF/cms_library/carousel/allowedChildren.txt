@@ -1,4 +1,0 @@
-${card}
-${container}
-${paragraph}
-${title}
