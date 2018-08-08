@@ -1,3 +1,0 @@
-<div id="$!{id}" class="container" style="$!{container-style}">
-  $!{children}
-</div>

@@ -1,3 +1,0 @@
-<li id="$!{id}" class="nav-item" style="$!{nav-item-style}">
-	<a class="nav-link" href="$!{navbar-link}">$!{link-name}</a>
-</li>
