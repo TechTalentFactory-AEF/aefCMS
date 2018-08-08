@@ -1,0 +1,3 @@
+<div id="$!{id}" class="col-2" style="$!{style}">
+  $!{children}
+</div>

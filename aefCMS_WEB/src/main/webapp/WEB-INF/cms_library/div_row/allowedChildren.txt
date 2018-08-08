@@ -1,1 +1,13 @@
 ${div_col}
+${div_col-1}
+${div_col-2}
+${div_col-3}
+${div_col-4}
+${div_col-5}
+${div_col-6}
+${div_col-7}
+${div_col-8}
+${div_col-9}
+${div_col-10}
+${div_col-11}
+${div_col-12}
