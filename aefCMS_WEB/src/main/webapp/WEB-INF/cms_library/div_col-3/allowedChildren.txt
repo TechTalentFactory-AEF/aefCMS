@@ -12,4 +12,5 @@ ${h6}
 ${img}
 ${ol}
 ${p}
+${pre_code}
 ${ul}
