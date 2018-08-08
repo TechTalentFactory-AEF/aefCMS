@@ -7,6 +7,7 @@
 		
 		.z-menubar {
 		    border: none;
+		    padding: 0;
 		}
 		
 		.z-menu-text, .z-menuitem-text {
@@ -16,7 +17,11 @@
 		.z-menu-content, .z-menuitem-content {
 		    color: white;
 		    background: #0093f9;	/*blue*/
-		    border: 4px solid transparent;
+		    border: 6px solid transparent;
+		}
+		
+		.z-menubar-horizontal li {
+   			margin: 0;
 		}
 		
 		.z-menu-content:hover, .z-menuitem-content:hover {
