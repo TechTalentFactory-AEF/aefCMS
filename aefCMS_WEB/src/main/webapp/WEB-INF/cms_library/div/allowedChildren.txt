@@ -4,6 +4,7 @@ ${div_card}
 ${div_container}
 ${div_container-fluid}
 ${div_row}
+${form}
 ${h1}
 ${h5}
 ${ol}
