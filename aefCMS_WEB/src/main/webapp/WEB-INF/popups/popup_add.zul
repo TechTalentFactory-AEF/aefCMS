@@ -26,7 +26,7 @@
 			<template name="model">
 		        <row visible="${!each.equals('id') and !each.equals('children')}">
 		            <label value="@load(each)" hflex="1" style="color: grey"/>
-		            <textbox value="@bind(IndexVm.attributesHashMap[each])" hflex="1"/>
+		            <textbox value="@bind(IndexVm.attributesHashMap[each])" hflex="1" multiline="true"/>
 		        </row>
 	   		</template>
 	   	</rows>
