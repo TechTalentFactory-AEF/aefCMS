@@ -1,5 +1,5 @@
 <window mode="modal" 
-		width="50%"
+		width="70%"
     	contentStyle="overflow:auto"
  		style="padding: 0;">
 	
@@ -19,16 +19,16 @@
 	<separator spacing="20px"/>
 
 	<!-- VARIABLE FORM -->
-	<grid model="@load(IndexVm.selectedLibraryElement.attributes)">
+	<grid model="@load(IndexVm.selectedLibraryElement.attributes)" mold="paging" pageSize="10">
 		<columns>
-			<column />
-			<column />
+			<column hflex="20%" align="right" />
+			<column hflex="80%"/>
 		</columns>
 		<rows>
 			<template name="model">
 		        <row visible="${!each.equals('id') and !each.equals('children')}">
-		            <label value="@load(each)"/>
-		            <textbox value="@bind(IndexVm.attributesHashMap[each])"/>
+		            <label value="@load(each)" hflex="1" style="color: grey"/>
+		            <textbox value="@bind(IndexVm.attributesHashMap[each])" hflex="1"/>
 		        </row>
 	   		</template>
 	   	</rows>
