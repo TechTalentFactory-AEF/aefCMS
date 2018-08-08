@@ -9,6 +9,10 @@
 		    border: none;
 		}
 		
+		.z-menu-text, .z-menuitem-text {
+		    font-size: 16px;
+		}
+		
 		.z-menu-content, .z-menuitem-content {
 		    color: white;
 		    background: #0093f9;	/*blue*/
