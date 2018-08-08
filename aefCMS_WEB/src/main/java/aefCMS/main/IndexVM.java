@@ -377,5 +377,14 @@ public class IndexVM {
 		System.out.println("**DEBUG** (forceIframeRefresh) ***Done forced Iframe refresh***");
 	}
 	
+	private void createDraggableTreeElement(PageElement node, DraggableTreeElement parent) {
+		DraggableTreeElementPlus draggableTreeNode = new DraggableTreeElementPlus(parent, node.getType().getName(), node, this);
+		if (node.getChildren().size() > 0) {
+			for (PageElement child : node.getChildren()) {
+				createDraggableTreeElement(child, draggableTreeNode);
+			}
+		}
+	}
+	
 }	
 	
