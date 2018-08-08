@@ -6,9 +6,12 @@ ${div_container}
 ${div_container-fluid}
 ${div_dropdown}
 ${div_jumbotron}
+${form}
 ${h1}
 ${img}
 ${nav_navbar}
 ${ol}
 ${ul}
 ${p}
+
+${_UI-TEST______________________________________________________________________}

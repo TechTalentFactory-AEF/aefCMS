@@ -1,6 +1,36 @@
 <?page title="aefCMS"?>
 
 <zk>
+	<!-- OVERRIDE OF THE DEFAULT ZK THEMING -->
+	<style>
+		/*** import/export button ***/
+		
+		.z-menubar {
+		    border: none;
+		}
+		
+		.z-menu-text, .z-menuitem-text {
+		    font-size: 16px;
+		}
+		
+		.z-menu-content, .z-menuitem-content {
+		    color: white;
+		    background: #0093f9;	/*blue*/
+		    border: 4px solid transparent;
+		}
+		
+		.z-menu-content:hover, .z-menuitem-content:hover {
+		    color: white;
+		    background-color: #4fb7ff;
+		}
+		
+		/*** page splitter ***/
+		
+		.z-east-splitter, .z-west-splitter, .z-north-splitter, .z-south-splitter {
+   			background-color: rgb(216, 216, 216); /*grey*
+		}
+	</style>
+
 	<window apply="org.zkoss.bind.BindComposer"
 			viewModel="@id('IndexVm') @init('aefCMS.main.IndexVM')"
 			validationMessages="@id('indexVmMsgs')"
