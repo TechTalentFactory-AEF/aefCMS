@@ -1,0 +1,1 @@
+<label id=$!{id} class="form-check-label" style="$!{style}">$!{text}</label>

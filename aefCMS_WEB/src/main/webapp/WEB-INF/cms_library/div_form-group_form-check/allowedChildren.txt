@@ -1,0 +1,2 @@
+${input_form-check-input_checkbox}
+${label_form-check-label}

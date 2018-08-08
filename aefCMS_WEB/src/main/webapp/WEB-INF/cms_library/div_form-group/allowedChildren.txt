@@ -1,0 +1,8 @@
+${input_form-control_email}
+${input_form-control_password}
+${input_form-control-file_file}
+${label}
+${select_form-control}
+${select_form-control_multiple}
+${small_form-text_text-muted}
+${textarea_form-control}

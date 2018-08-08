@@ -3,6 +3,7 @@ ${div_card}
 ${div_container}
 ${div_container-fluid}
 ${div_jumbotron}
+${form}
 ${h1}
 ${nav_navbar}
 ${p}
