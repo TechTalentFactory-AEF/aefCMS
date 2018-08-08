@@ -1,0 +1,3 @@
+<thead id="$!{id}" style="$!{style}">
+	$!{children}
+</thead>

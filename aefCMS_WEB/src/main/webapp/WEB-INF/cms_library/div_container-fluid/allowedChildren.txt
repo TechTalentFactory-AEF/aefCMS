@@ -5,7 +5,9 @@ ${div_dropdown}
 ${div_row}
 ${h1}
 ${h1_display-3}
+${i}
 ${img}
 ${ol}
 ${p}
+${table}
 ${ul}

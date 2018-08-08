@@ -1,0 +1,3 @@
+<table id="$!{id}" class="table" style="$!{style}">
+	$!{children}
+</table>
