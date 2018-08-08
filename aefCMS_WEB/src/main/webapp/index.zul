@@ -14,14 +14,14 @@
 		    font-size: 16px;
 		}
 		
+		.z-menubar-horizontal li {
+   			margin: 0;
+		}
+		
 		.z-menu-content, .z-menuitem-content {
 		    color: white;
 		    background: #0093f9;	/*blue*/
 		    border: 6px solid transparent;
-		}
-		
-		.z-menubar-horizontal li {
-   			margin: 0;
 		}
 		
 		.z-menu-content:hover, .z-menuitem-content:hover {
