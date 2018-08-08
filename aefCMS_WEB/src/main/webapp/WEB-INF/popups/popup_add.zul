@@ -1,5 +1,5 @@
 <window mode="modal" 
-		width="50%"
+		width="70%"
     	contentStyle="overflow:auto"
  		style="padding: 0;">
 	
@@ -8,16 +8,36 @@
 			<label value="Select the type of element to add:" style="color: grey"/>
 			<!-- SELECT MENU -->
 			<listbox model="@load(IndexVm.libraryElementList)" 
-					 selectedItem="@bind(IndexVm.selectedLibraryElement)"
-					 mold="select" 
-					 rows="1"
-					 width="100%"/>
+				 selectedItem="@bind(IndexVm.selectedLibraryElement)"
+				 width="100%"
+				 rows="1"
+				 mold="select">
+				<template name="model">
+		       		<listitem>
+		            	<listcell label="@load(each.name)"/>
+		        	</listitem>
+		        </template>
+			</listbox>
 		</vbox>
 	</div>	
 	<separator spacing="20px"/>
 	
 	<!-- VARIABLE FORM -->
-	<include src="@load(IndexVm.selectedLibraryElementZul)"/>
+	<grid model="@load(IndexVm.selectedLibraryElement.attributes)" visible="@load(! empty IndexVm.selectedLibraryElement)">
+		<columns>
+			<column width="25%"/>
+			<column />
+		</columns>
+		<rows>
+			<template name="model">
+		        <row visible="${!each.equals('id') and !each.equals('children')}">
+		            <label value="@load(each)"/>
+		            <textbox value="@bind(IndexVm.attributesHashMap[each])" hflex="1"/>
+		        </row>
+	   		</template>
+	   	</rows>
+	</grid>
+	<!-- 	<include src="@load(IndexVm.selectedLibraryElementZul)"/> -->
 	<separator spacing="20px"/>
 	
 	<div align="center">	

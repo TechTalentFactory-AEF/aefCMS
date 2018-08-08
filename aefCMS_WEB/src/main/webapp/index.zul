@@ -30,7 +30,23 @@
 				<vlayout vflex="1">
 					<!-- UPPER MENUS -->
 					<hbox width="100%" pack="end" >
+						<!--  
 					 	<button label="Export Html" onClick="@command('exportHtml')" height="40px" width="min"/>
+					 	<button label="Export Json" onClick="@command('exportJson')" height="40px" width="min"/>
+					 	<button label="Upload Json" upload="true" onUpload="@command('uploadJson')" height="40px" width="min" />
+					 	-->
+						<menubar>
+							<menu label="Export / Import">
+							     <menupopup>
+							        <menuitem label="Export Html" onClick="@command('exportHtml')"/>
+							        <menuitem label="Export Json" onClick="@command('exportJson')"/>
+							        <menuitem label="Import Json" upload="true" onUpload="@command('uploadJson')"/>
+							        <menuseparator/>
+							        <menuitem label="Close Menu"/>
+							    </menupopup>
+							</menu>
+						</menubar>
+					 	
 						<separator hflex="1"/>						
 						<button height="40px" iconSclass="z-icon-mobile" onClick="@command('resizeIFrame', iframeWidth='576px')"/>
 						<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', iframeWidth='768px')"/>

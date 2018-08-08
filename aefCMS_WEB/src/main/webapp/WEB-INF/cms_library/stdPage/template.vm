@@ -10,7 +10,7 @@
     	
 		<title>$!{title}</title>
 	</head>
-	<body style="background-color: $!{debug}">	<!-- I color the background just to test if the iframe has been loaded -->
+	<body style="$!{stdPage-style}">
 		
 		$!{children}
 		
