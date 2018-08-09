@@ -58,7 +58,7 @@ public class IndexVM {
 	
 	//DEFAULT VALUES
 	
-	private final String DEFAULT_STDPAGE_TITLE = "My WebPage (created with aefCMS)";
+	private final String DEFAULT_STDPAGE_TITLE = "My WebPage (made with aefCMS)";
 	
 	//ASSETS
 	
