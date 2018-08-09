@@ -87,7 +87,7 @@
 						<button height="40px" iconSclass="z-icon-tablet" onClick="@command('resizeIFrame', iframeWidth='768px')"/>
 						<button height="40px" iconSclass="z-icon-laptop"  onClick="@command('resizeIFrame',iframeWidth='992px')"/>	
 						<button height="40px" iconSclass="z-icon-desktop"  onClick="@command('resizeIFrame', iframeWidth='1200px')"/>
-						<button height="40px" label="Full Size" onClick="@command('resizeIFrame', iframeWidth='100%')"/>	
+						<button height="40px" label="Fit to Page" onClick="@command('resizeIFrame', iframeWidth='100%')"/>	
 					</hbox>
 					<!-- GENERATED PAGE --> 
 					<div align="center" hflex="1" vflex="1" style="overflow-x:auto; overflow-y:hidden;">

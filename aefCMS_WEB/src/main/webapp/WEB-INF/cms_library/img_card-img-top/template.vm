@@ -1,2 +1,2 @@
-<img id="$!{id}" class="card-img-top" src="$!{image-src};" alt="$!{description-text};" style="$!{style}">
+<img id="$!{id}" class="card-img-top" src="$!{image-src}" alt="$!{description-text}" style="$!{style}">
  

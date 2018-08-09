@@ -1,4 +1,2 @@
-${button}
-${h5_card-title}
+${div_card-body}
 ${img_card-img-top}
-${p_card-text}

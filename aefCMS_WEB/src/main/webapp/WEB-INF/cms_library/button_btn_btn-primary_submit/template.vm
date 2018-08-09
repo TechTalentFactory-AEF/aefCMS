@@ -1,0 +1,1 @@
+ <button id="$!{id}" class="btn btn-primary" type="submit">$!{text}</button>

@@ -1,0 +1,3 @@
+<a id="$!{id}" class="btn btn-primary" href="$!{button-link}" role="button"  style="$!{style}">
+	#if(${font-awsome-class})<i class="$!{font-awsome-class}"> </i>#else#end$!{button-name}
+</a>

@@ -56,6 +56,10 @@ public class IndexVM {
 	private final String POPUPS_PATH	   = "/WEB-INF/popups/" + "popup_";		//ex.   add -> /WEB-INF/popups/popup_add.zul
 	private final String OUT_FILE_NAME	   = "index";							//ex. index -> index.html
 	
+	//DEFAULT VALUES
+	
+	private final String DEFAULT_STDPAGE_TITLE = "My WebPage (made with aefCMS)";
+	
 	//ASSETS
 	
 	private Library lib;
@@ -183,7 +187,7 @@ public class IndexVM {
 		System.out.println("**DEBUG** (init) No json file found, creating default model.");
 		Map<String, String> stdPageAttributes = new HashMap<String, String>();
 		stdPageAttributes.put("id", UUID.randomUUID().toString());
-		stdPageAttributes.put("title", "My Web Page");
+		stdPageAttributes.put("title", DEFAULT_STDPAGE_TITLE);
 		stdPageAttributes.put("debug", "#f2f2f2");	//DEBUG  (#f2f2f2 = light gray)
 		PageElement stdPage = new PageElement(lib.getElement("stdPage"), stdPageAttributes);
 		model = new PageTree(stdPage);
