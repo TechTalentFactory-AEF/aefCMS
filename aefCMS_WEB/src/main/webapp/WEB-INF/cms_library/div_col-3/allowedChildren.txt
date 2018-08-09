@@ -1,7 +1,11 @@
+${a}
 ${a_btn-primary}
 ${div}
 ${div_card}
+${div_carousel}
 ${div_dropdown}
+${div_jumbotron}
+${div_row}
 ${form}
 ${h1}
 ${h2}
@@ -9,8 +13,13 @@ ${h3}
 ${h4}
 ${h5}
 ${h6}
+${hr}
+${i}
 ${img}
+${label}
+${nav_navbar}
 ${ol}
 ${p}
 ${pre_code}
+${table}
 ${ul}
